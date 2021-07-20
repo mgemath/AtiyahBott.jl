@@ -1,7 +1,11 @@
 name = "AtiyahBott"
 uuid = "4bc0d046-1179-4daa-900a-9bc021c7f891"
-authors = ["Gios89 <muratore.g.e@gmail.com>"]
+authors = ["Giosuè Muratore <muratore.g.e@gmail.com >", "Csaba Schneider <csaba.schneider@gmail.com>"]
 version = "0.1.0"
 
 [deps]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+
+[compat]
+julia = "1.6"
