@@ -12,7 +12,7 @@ using ProgressMeter
 using Downloads
 using CodecZlib
 
-current_dir = @__DIR__
+const current_dir = @__DIR__
 
 include("Marked.jl")
 include("GraphFunctions.jl")

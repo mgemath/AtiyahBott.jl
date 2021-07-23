@@ -2,7 +2,7 @@ export
     AtiyahBottFormula,
     AtiyahBottFormulaForGraph
 
-number_trees = [1, 1, 2, 3, 6, 11, 23, 47, 106, 235, 551, 1301, 3159]
+const  number_trees = [1, 1, 2, 3, 6, 11, 23, 47, 106, 235, 551, 1301, 3159]
 #the number of non-isomorphic graphs with given number of vertices (starting from 2)
 
 # ProgressData contains the data necessary to keep the progress bar up-to-date
