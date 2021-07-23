@@ -31,23 +31,23 @@ function AtiyahBottFormulaForGraph(g::SimpleGraph, pruf_str::String,
     local n_results::Int64 = length(P)   #this store the number of final results of our computation
     local result::Vector{Rational{BigInt}} = [Rational{BigInt}(0) for _ in 1:n_results] #the array of final results
     
-    for N in 1:n
+    #for N in 1:n
 
-        from_file, file_name = exists_file_with_colorings( pruf_str, N ) #n <- N
+        from_file, file_name = exists_file_with_colorings( pruf_str, n ) #n <- N
 
         if from_file 
             cols = graph_coloring_from_file( file_name )        
         else 
             #println( "graph not found!!!" )
-            cols = graph_coloring( g, UInt8(N+1) )
+            cols = graph_coloring( g, UInt8(n+1) )   #n <- N
         end 
 
 
         for c in cols   #we run among all colorations of g
             if from_file
                 aut = cols.current_aut  #we are read the number of automorphisms of the colorated graph from the file
-            else
-                N+1 in cols.current_color || continue
+            #else
+                #N+1 in cols.current_color || continue
             end
             
             for m in marks(nv(g), n_marks)    #we run among all marks of g, if n_marks==0 we have only the empty mark
@@ -78,7 +78,7 @@ function AtiyahBottFormulaForGraph(g::SimpleGraph, pruf_str::String,
                 end
             end
         end
-    end
+    #end
     return result
 end 
 

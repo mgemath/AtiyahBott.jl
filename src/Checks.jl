@@ -207,7 +207,7 @@ function fill_Data(n::Int64, d::Int64)::Bool
 
             name_file = string(split(str, ',')[1],"0.gz")
             if !(name_file in readdir(Dim_dir))
-                url = "https://raw.githubusercontent.com/Gios89/Colorations/main/Dimension$n/$name_file"
+                url = "https://raw.githubusercontent.com/mgemath/Colorations/main/Dimension$n/$name_file"
                 dest = Dim_dir*"/$name_file"
                 try
                     Downloads.download(url, dest)
