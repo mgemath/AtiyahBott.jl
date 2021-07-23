@@ -2,13 +2,12 @@
 This package contains an implementation of the Atiyah-Bott residue formula for the moduli space of genus 0 stable maps in the Julia language. The theory behind the package is described in the paper 
 "Effective computations of the Atiyah-Bott formula" by Giosuè Muratore e Csaba Schneider (https://arxiv.org/pdf/2105.11183.pdf).
 
-In order to install this package, type:
+In order to install this package, type:<br>
 julia> using Pkg<br>
 julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
 
-After that, simply type
-
-julia> using AtiyahBott;
+After that, simply type<br>
+julia> using AtiyahBott
 
 To use our code, you should first define the equivariant classes to be calculated as "P = (g,c,w,s,m) ->...".<br>
 After the "->", one has to write an expression in the equivariant classes. After P is defined, one has to call the
