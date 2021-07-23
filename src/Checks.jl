@@ -166,7 +166,7 @@ function check_Data()
         println(current_dir," contains:")
         files = [x for x in readdir(data_dir*current_dir)]
         for v in 2:14
-            num = count(x->length(x)==v+3 && endswith(x,".clr"), files)
+            num = count(x->length(x)==v+3 && endswith(x,".gz"), files)
             if num == 0
                 println( "No colored graphs with ", v, " vertices.")
                 continue
