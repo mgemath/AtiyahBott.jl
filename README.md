@@ -7,6 +7,7 @@ julia> using Pkg<br>
 julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
 
 After that, simply type
+
 julia> using AtiyahBott;
 
 To use our code, you should first define the equivariant classes to be calculated as "P = (g,c,w,s,m) ->...".<br>
