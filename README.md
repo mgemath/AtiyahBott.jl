@@ -6,8 +6,11 @@ In order to install this package, type:<br>
 julia> using Pkg<br>
 julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
 
-After that, simply type<br>
-julia> using AtiyahBott
+The installation will download automatically all colorations up to degree 4 and dimension 4 from here: https://github.com/mgemath/Colorations.
+
+After the installation, simply type<br>
+julia> using AtiyahBott<br>
+every time you want to use the program.
 
 To use our code, you should first define the equivariant classes to be calculated as "P = (g,c,w,s,m) ->...".<br>
 After the "->", one has to write an expression in the equivariant classes. After P is defined, one has to call the
