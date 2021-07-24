@@ -4,7 +4,7 @@ const current_dir = @__DIR__
 const number_trees = [1, 1, 2, 3, 6, 11, 23, 47, 106, 235, 551, 1301, 3159]
 
 list_g = open(dirname(current_dir)*"/src/list_trees.txt") 
-for n in 3:3#1:4 #d=4
+for n in 1:4 #d=4
 
     Dim_dir::String = dirname(current_dir)*"/Data/Dimension$n" #path of the folder containing the colorations
     mkpath(Dim_dir) #create the folder
