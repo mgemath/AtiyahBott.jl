@@ -8,9 +8,9 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/mgemath/AtiyahBott.jl.git",
+    repo = "github.com/mgemath/AtiyahBott.jl.git"#=,
     target = "build",
-    push_preview = true,
+    push_preview = true,=#
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
