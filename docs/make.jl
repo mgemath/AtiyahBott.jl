@@ -8,7 +8,7 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/Gios89/AtiyahBott.jl.git",
+    repo = "github.com/mgemath/AtiyahBott.jl.git",
     target = "build",
     push_preview = true,
 )
