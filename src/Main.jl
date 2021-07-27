@@ -22,6 +22,11 @@ end
 
 # the following function performs the computation of the Atiyah-Bott formula
 # for a particular graph.
+"""
+    AtiyahBottFormulaForGraph(g, pruf_str, aut, n, deg, n_marks, P, s)
+
+Apply the Atiyah-Bott formula to all colorations of a specific graph. It is useful for splitting the computation in multiple parts, to be computed in single threads.
+"""
 function AtiyahBottFormulaForGraph(g::SimpleGraph, pruf_str::String, 
     aut::Int64, n::Int64, deg::Int64, n_marks::Int64, P, s::Vector{Rational{BigInt}},
     progress_data::ProgressData = EmptyProgressData())::Vector{Rational{BigInt}}
@@ -88,8 +93,8 @@ end
 
 Apply the Atiyah-Bott residue formula to the class `P`, in the moduli space of rational marked stable maps to the projective space of dimension `n` of degree `d` with `m` marks.
 # Arguments
-- `n::Int64`: the dimension of the projective space.
-- `d::Int64`: the degree of the stable maps.
+- `n::Int64`: the dimension of the projective space, it must be between 1 and 254.
+- `d::Int64`: the degree of the stable maps, it must be between 1 and 13.
 - `m::Int64`: the number of marks.
 - `P`: the equivariant class.
 - `do_check::Bool`: if `true`, checks if `P` is a well defined zero cycle, and stops the computation if this is not true. If `false`, the computation may have an unexpected behaviour. By default is `true`.
@@ -113,8 +118,9 @@ julia> AtiyahBottFormula(3,1,0,P);
 Warning: the class is not a 0-cycle.
 julia> AtiyahBottFormula(4,1,0,P);
 Result: 2875//1
-julia> AtiyahBottFormula(4,1,0,P,false);       #same as before, but without the preliminary check on `P`
-julia> AtiyahBottFormula(4,1,0,P,false,false); #same as before, but without showing the progress bar
+julia> AtiyahBottFormula(4,1,0,P,false);             #same as before, but without the preliminary check on `P`
+julia> AtiyahBottFormula(4,1,0,P,false,false);       #same as before, but without showing the progress bar
+julia> AtiyahBottFormula(4,1,0,P,false,false,false); #same as before, but without checking for the colorations
 ```
 
 The function returns an array of the same dimension of `P` (non-vectorized classes are assumed as 1-dimensional arrays). The Julia notation for accessing to array is `name_of_array[i]` where `i` is an index starting from 1.

@@ -2,13 +2,13 @@
 const Read = Dict("1"=>1,"2"=>2,"3"=>3,"4"=>4,"5"=>5,"6"=>6,"7"=>7,"8"=>8,"9"=>9,"a"=>10,           
             "b"=>11,"c"=>12,"d"=>13,"e"=>14,"f"=>15,"g"=>16,"h"=>17,"i"=>18,"j"=>19,"k"=>20,
             "l"=>21,"m"=>22,"n"=>23,"o"=>24,"p"=>25,"q"=>26,"r"=>27,"s"=>28,"t"=>29,"u"=>30)
-"""
+#="""
 The structure `graph_coloring` define the colorations of a graph.
 # Arguments
 - `graph::SimpleGraph`: the graph.
 - `num_cols::UInt8`: the number of colors.
 - `current_color::Array{UInt8,1}`: the array of colors.
-"""
+"""=#
 mutable struct graph_coloring
     graph::SimpleGraph
     num_cols::UInt8
@@ -130,10 +130,10 @@ function next_tuple!( tuple::Array{UInt8,1}, max_entry::UInt8 )::Union{Nothing, 
     return nothing
 end
 
-
+#=
 """
 Compute the graph with a specific Prufer sequence.
-"""
+"""=#
 function PruferToGraph(prufer::Vector{UInt8})::SimpleGraph
     
     num_v = length(prufer)+2 #number of vertices
@@ -159,10 +159,10 @@ function PruferToGraph(prufer::Vector{UInt8})::SimpleGraph
 
     return g
 end
-
+#=
 """
 Extract a Prufer sequence and a number from a string. The number is the number of automorphisms of the graph with that Prufer sequence.
-"""
+"""=#
 function get_graph(str::String)::Tuple{SimpleGraph{Int64}, Int64}
 
     s = split(str, ',')
@@ -170,10 +170,10 @@ function get_graph(str::String)::Tuple{SimpleGraph{Int64}, Int64}
     a = parse(Int64,s[2])       
     return (g, a)
 end
-
+#=
 """
 Return all the arrays of length `l` such that the sum of all elements of the array is `d`.
-"""
+"""=#
 function get_weights(l::Int64, d::Int64)::Vector{Vector{Int64}}
     return vcat(unique.(permutations.(partitions(d,l)))...)
 end

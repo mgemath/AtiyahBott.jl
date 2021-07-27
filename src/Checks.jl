@@ -186,7 +186,7 @@ end
     fill_Data(n, d)
 
 Download from internet all colorations used for computations in the moduli space of with relative n and d.
-Return `true` if there is no need to download any file or if all downloads go well. otherwise, return `false`.
+Return `true` if there is no need to download any file or if all downloads go well. Otherwise, return `false`.
 """
 function fill_Data(n::Int64, d::Int64)::Bool
 

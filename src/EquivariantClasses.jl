@@ -27,7 +27,7 @@ Result: 1//1
 julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,[2,2,3]);
 julia> AtiyahBottFormula(3,1,0,P);
 Result: 1//1
-julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,[2,2])*Hypersurface(g,c,w,s,3)
+julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,[2,2])*Hypersurface(g,c,w,s,3);
 julia> AtiyahBottFormula(3,3,0,P);
 Result: 756//1
 ```
@@ -138,7 +138,7 @@ Equivariant class of the Euler class of the bundle equal to the direct image und
 
 # Example
 ```julia-repl
-julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)^2*O1_i(g,c,w,s,m,2)^3*Contact(g,c,w,s)
+julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)^2*O1_i(g,c,w,s,m,2)^3*Contact(g,c,w,s);
 julia> AtiyahBottFormula(3,1,2,P);
 Result: 1//1
 ```
@@ -178,10 +178,10 @@ Equivariant class of the pull-back of O(1) with respect to the i-th evaluation m
 
 # Example
 ```julia-repl
-julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)*O1_i(g,c,w,s,m,2)
+julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)*O1_i(g,c,w,s,m,2);
 julia> AtiyahBottFormula(2,1,2,P);
 Result: 1//1
-julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)^2*Hypersurface(g,c,w,s,2)
+julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)^2*Hypersurface(g,c,w,s,2);
 julia> AtiyahBottFormula(3,1,1,P);
 Result: 4//1
 ```
@@ -211,13 +211,20 @@ This function is equivalent to the product of the function `O1_i(g,c,w,s,m,i)` w
 
 # Example
 ```julia-repl
-julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)
+julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m);
 julia> AtiyahBottFormula(2,3,8,P);
 Result: 12//1
-julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)^2*Hypersurface(g,c,w,s,3)
+julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)^2*Hypersurface(g,c,w,s,3);
 julia> AtiyahBottFormula(3,2,1,P);
 Result: 81//1
 ```
+
+In order to remove `O1_i(g,c,w,s,m,i)` for some `i`, it is enough to divide by that function.
+    # Example
+```julia-repl
+julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)//O1_i(g,c,w,s,m,1);
+```
+Here `P` is the product of all `O1_i(g,c,w,s,m,i)` where `i` runs from 2 to `m`.
 """
 function O1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks)::Rational{BigInt}
     
@@ -242,7 +249,7 @@ The equivariant class of the first derived functor of the pull-back of O(-k).
 
 # Example
 ```julia-repl
-julia> P = (g,c,w,s,m) -> R1(g,c,w,s,1)^2
+julia> P = (g,c,w,s,m) -> R1(g,c,w,s,1)^2;
 julia> AtiyahBottFormula(1,3,0,P);
 Result: 1//27
 ```
@@ -409,10 +416,10 @@ Equivariant class of the jet bundle J^p of the pull back of O(q) with respect to
 
 # Example
 ```julia-repl
-    julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*Jet(g,c,w,s,m,1,1)
+    julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*Jet(g,c,w,s,m,1,1);
     julia> AtiyahBottFormula(2,2,1,P);
     Result: 2//1
-    julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*(Jet(g,c,w,s,m,1,1)+O1(g,c,w,s,m)^2)
+    julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*(Jet(g,c,w,s,m,1,1)+O1(g,c,w,s,m)^2);
     julia> AtiyahBottFormula(2,2,1,P);
     Result: 3//1
     julia> P = (g,c,w,s,m) -> (O1(g,c,w,s,m)^2)//k*Jet(g,c,w,s,m,4*d-2,k);

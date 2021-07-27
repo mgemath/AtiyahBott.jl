@@ -1,10 +1,10 @@
-"""
+#="""
 The structure `marks` define the marked vertex of a graph.
 # Arguments
 - `n_vert::Int64`: the number of vertices.
 - `m::Int64`: the number of marks.
 - `get_vertex::Dict{Int64,Int64}`: a dictionary Dict{Int64,Int64} which associate to each mark a vertex.
-"""
+"""=#
 #if !@isdefined marks 
     mutable struct marks
         n_vert::Int64
@@ -59,10 +59,10 @@ function next_mark!(mark::marks, index::Int64)
     
     return nothing
 end            
-
+#=
 """
 Take the marks of a graph and return a dictionary Dict{Int64,Vector{Int64}} which associate to each vertex the set of marks on the vertex.
-"""
+"""=#
 function invert_marks(mark::marks)::Dict{Int64,Vector{Int64}}
     new_D = Dict{Int64,Vector{Int64}}()
     D = mark.get_vertex
@@ -76,13 +76,13 @@ function invert_marks(mark::marks)::Dict{Int64,Vector{Int64}}
     end
     return new_D
 end
-
+#=
 """
 Return the number of marks assigned to some vertex v.
 # Arguments
 - `mark::marks`: the marks assigned to a graph.
 - `v::Int64`: the vertex.
-"""
+"""=#
 function num_marks(mark::marks, v::Int64)::Int64
     return sum([mark.get_vertex[w] == v for w in 1:mark.m])
 end
