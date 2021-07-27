@@ -3,14 +3,18 @@ This package contains an implementation of the Atiyah-Bott residue formula for t
 "Effective computations of the Atiyah-Bott formula" by Giosuè Muratore e Csaba Schneider (https://arxiv.org/pdf/2105.11183.pdf).<br>
 Full documentation is available here: https://mgemath.github.io/AtiyahBott.jl/
 
-In order to install this package, type:<br>
+In order to install this package, type:
+```julia
 julia> using Pkg
 julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
+```
 
 The installation will download automatically all colorations up to degree 4 and dimension 4 from here: https://github.com/mgemath/Colorations.
 
-After the installation, simply type:<br>
+After the installation, simply type:
+```julia
 julia> using AtiyahBott
+```
 every time you want to use the program.
 
 To use our code, you should first define the equivariant classes to be calculated as 
@@ -65,4 +69,4 @@ julia> AtiyahBottFormula(2,d,1,P);
 
 In order to execute these computations, the system requires the list of tree graphs up to d+1 vertices. These graphs are available in the file list_trees.txt. 
 We also need the possible colorings of these graphs with n+1 colors. These can either be computed by the package or they can be read from a file stored 
-in the Data directory (this is the fastest option). The user can use function check_Data() to see the list of graphs with pre-computed colorings. 
+in the Data directory (this is the fastest option). The user can use function check_Data() to see the list of graphs with pre-computed colorings.
