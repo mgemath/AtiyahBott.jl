@@ -3,7 +3,7 @@ This package contains an implementation of the Atiyah-Bott residue formula for t
 "Effective computations of the Atiyah-Bott formula" by Giosuè Muratore and Csaba Schneider (https://arxiv.org/pdf/2105.11183.pdf).<br>
 Full documentation is available here: https://mgemath.github.io/AtiyahBott.jl/
 
-# Installation
+## Installation
 In order to install this package, type:
 ```julia
 julia> using Pkg
@@ -42,10 +42,10 @@ Brief descriptions on these functions can be obtained through the standard help 
 ```julia
 help?> Psi
 ```
-# Examples
+## Examples
 In the following we list some geometrically meaning computations.
 
-## Curves in projective spaces
+### Curves in projective spaces
 
 To compute the number of rational plane curves of degree d through 3d−1 general points, one may write:
 ```julia
@@ -58,7 +58,7 @@ Alternatively, one can perform such computation with zero marked points by typin
 julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^(3*d-1);
 julia> AtiyahBottFormula(2,d,0,P);
 ```
-## Curves in Hypersurfaces
+### Curves in Hypersurfaces
 
 The virtual number of rational degree d curves on a general complete intersection of type (2,3) in the projective space of dimension 5:
 ```julia
@@ -73,7 +73,7 @@ julia> P = (g,c,w,s,m) -> Hypersurface(g,c,w,s,3)*(Incidency(g,c,w,s,2)//3)^(d-1
 julia> AtiyahBottFormula(3,d,0,P);
 ```
 
-## Tangency conditions
+### Tangency conditions
 
 The number plane rational degree d curves through 3d-2 points and tangent to a line:
 ```julia
@@ -82,7 +82,7 @@ julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^(3*d-1)*Jet(g,c,w,s,m,1,1);
 julia> AtiyahBottFormula(2,d,1,P);
 ```
 
-## Hurwitz numbers
+### Hurwitz numbers
 The weighted number of genus 0 degree d covers of the projective line, which are étale over a fixed point and with 2d-2 fixed finite simple ramification points, is:
 ```julia
 julia> d = 1; #for other values of d, change this line
@@ -91,7 +91,7 @@ julia> AtiyahBottFormula(1,d,2*d-2,P);
 ```
 See https://arxiv.org/pdf/math/0101147.pdf.
 
-# Future goals
+## Future goals
 The following may be future expansions of this program.
  - Support for positive genus curves.
  - GPU or parallel acceleration.
