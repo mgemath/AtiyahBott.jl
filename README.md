@@ -89,7 +89,7 @@ julia> AtiyahBottFormula(2,d,1,P);
 The weighted number of genus 0 degree d covers of the projective line, which are étale over a fixed point and with 2d-2 fixed finite simple ramification points, is:
 ```julia
 julia> d = 1; #for other values of d, change this line
-julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)*Psi(g,c,w,s,m,ones(Int64,2*d-2));
+julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)*Psi(g,c,w,s,m,ones(Int,2*d-2));
 julia> AtiyahBottFormula(1,d,2*d-2,P);
 ```
 See https://arxiv.org/pdf/math/0101147.pdf.
