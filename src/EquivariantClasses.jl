@@ -416,14 +416,14 @@ Equivariant class of the jet bundle J^p of the pull back of O(q) with respect to
 
 # Example
 ```julia-repl
-    julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*Jet(g,c,w,s,m,1,1);
-    julia> AtiyahBottFormula(2,2,1,P);
-    Result: 2//1
-    julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*(Jet(g,c,w,s,m,1,1)+O1(g,c,w,s,m)^2);
-    julia> AtiyahBottFormula(2,2,1,P);
-    Result: 3//1
-    julia> P = (g,c,w,s,m) -> (O1(g,c,w,s,m)^2)//k*Jet(g,c,w,s,m,4*d-2,k);
-    julia> d=1;k=1;AtiyahBottFormula(3,d,1,P);   #The value of this integral does not depend on k, only on d ;)
+julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*Jet(g,c,w,s,m,1,1);
+julia> AtiyahBottFormula(2,2,1,P);
+Result: 2//1
+julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*(Jet(g,c,w,s,m,1,1)+O1(g,c,w,s,m)^2);
+julia> AtiyahBottFormula(2,2,1,P);
+Result: 3//1
+julia> P = (g,c,w,s,m) -> (O1(g,c,w,s,m)^2)//k*Jet(g,c,w,s,m,4*d-2,k);
+julia> d=1;k=1;AtiyahBottFormula(3,d,1,P);   #The value of this integral does not depend on k, only on d
 ```
 """
 function Jet(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks, p::Int64, q::Int64)::Rational{BigInt}
