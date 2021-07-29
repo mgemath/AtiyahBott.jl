@@ -1,7 +1,7 @@
 # AtiyahBott.jl
 This package contains an implementation of the Atiyah-Bott residue formula for the moduli space of genus 0 stable maps in the Julia language. The theory behind the package and the algorithm are described in the paper 
 "Effective computations of the Atiyah-Bott formula" by Giosuè Muratore and Csaba Schneider (https://arxiv.org/pdf/2105.11183.pdf).<br>
-Full documentation is available here: https://mgemath.github.io/AtiyahBott.jl/
+Full documentation is available here: https://mgemath.github.io/AtiyahBott.jl/.
 
 ## Installation
 In order to install this package, type:
