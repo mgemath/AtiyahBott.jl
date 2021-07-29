@@ -190,12 +190,14 @@ Return `true` if there is no need to download any file or if all downloads go we
 """
 function fill_Data(n::Int64, d::Int64)::Bool
 
-    local final_state::Bool = true    
+    local final_state::Bool = true
+    local down_started::Bool = false
     Dim_dir::String = dirname(current_dir)*"/Data/Dimension$n" #path of the folder containing the colorations
     mkpath(Dim_dir) #create the folder
 
     list_g::IOStream = open(current_dir*"/list_trees.txt") 
     #open the file containing the list of Prufer sequences of graphs
+    println("Checking colorations...")
 
     for v in 2:(d+1) #run the computation among all graphs with fixed number of vertices
                 
@@ -207,6 +209,7 @@ function fill_Data(n::Int64, d::Int64)::Bool
 
             name_file = string(split(str, ',')[1],"0.gz")
             if !(name_file in readdir(Dim_dir))
+                down_started = true
                 url = "https://raw.githubusercontent.com/mgemath/Colorations/main/Dimension$n/$name_file"
                 dest = Dim_dir*"/$name_file"
                 try
@@ -225,5 +228,14 @@ function fill_Data(n::Int64, d::Int64)::Bool
 
     end
     close(list_g)
+
+    if final_state
+        if down_started
+            println("All missing colorations have been downloaded.")
+        else
+            println("All colorations are already here.")
+        end
+    end
+
     return final_state
 end
