@@ -177,6 +177,9 @@ Equivariant class of the pull-back of ``O(1)`` with respect to the i-th evaluati
 - `i::Int64`: the evaluation map.
 
 # Example
+```math
+\frac{n!}{k!(n - k)!} = \binom{n}{k}
+```
 ```julia-repl
 julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)*O1_i(g,c,w,s,m,2);
 julia> AtiyahBottFormula(2,1,2,P);
