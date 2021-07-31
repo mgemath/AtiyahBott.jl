@@ -180,7 +180,7 @@ Equivariant class of the pull-back of ``O(1)`` with respect to the i-th evaluati
 The following Gromov-Witten invariants
 ```math
 \\begin{aligned}
-\\int_{\\overline{M}_{0,2}(\\mathbb{P}^{2},1)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)\\cdot\\mathrm{ev}_{2}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1) &= 1 \\\
+\\int_{\\overline{M}_{0,2}(\\mathbb{P}^{2},1)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)\\cdot\\mathrm{ev}_{2}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1) &= 1 \\\\
 \\end{aligned}
 ```
 can be computed as
