@@ -256,6 +256,8 @@ end
 Delete the folder Data.
 """
 function free_Data()::Nothing
+
     rm(dirname(current_dir)*"/Data/", force=true, recursive=true)
+
     return nothing
 end
