@@ -32,6 +32,7 @@ codim
 is_zero_cycle
 check_Data
 fill_Data
+free_Data
 AtiyahBottFormulaForGraph
 ```
 

@@ -184,7 +184,7 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bo
 
     if down_col && !fill_Data(n, deg)
         printstyled("ERROR: ", bold=true, color=:red)
-        println("I was unable to download the colorations from the repository. Check your internet connexion or execute:")
+        println("I was unable to download the colorations from the repository. Check your internet connection or execute:")
         printstyled("julia> ", bold=true, color=:light_green)
         println("AtiyahBottFormula($n,$deg,$n_marks,P,$do_check,$show_bar,false);")
         return [Rational{BigInt}(0)]

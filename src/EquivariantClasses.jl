@@ -67,7 +67,7 @@ end
 
 
 """
-Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of ev^*O(b). It parameterizes curves contained in a hypersurface of degree `b`.
+Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of ``ev^*O(b)``. It parameterizes curves contained in a hypersurface of degree `b`.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -129,7 +129,7 @@ end
 
 
 """
-Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of: ev^*O(2) tensor the dualizing sheaf of the forgetful map. It parameterizes contact curves in an odd dimensional projective space.
+Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of: ``ev^*O(2)`` tensor the dualizing sheaf of the forgetful map. It parameterizes contact curves in an odd dimensional projective space.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -167,7 +167,7 @@ end
 
 
 """
-Equivariant class of the pull-back of O(1) with respect to the i-th evaluation map.
+Equivariant class of the pull-back of ``O(1)`` with respect to the i-th evaluation map.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -199,7 +199,7 @@ end
 
 
 """
-Equivariant class of the pull-back of O(1) with respect to the product of all evaluation maps.
+Equivariant class of the pull-back of ``O(1)`` with respect to the product of all evaluation maps.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -239,7 +239,7 @@ function O1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars:
 end
 
 """
-The equivariant class of the first derived functor of the pull-back of O(-k).
+The equivariant class of the first derived functor of the pull-back of ``O(-k)``.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -288,7 +288,7 @@ Equivariant class of the cycle of ``psi``-classes.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
 - `m::marks`: the marks.
-- `a::Vector{Int64}`: the vector of the exponents of the psi classes. It is ordered, meaning that the first element is the exponent of ``psi_1``, the second is the exponent of ``psi_2``, and so on.
+- `a::Vector{Int64}`: the vector of the exponents of the ``psi`` classes. It is ordered, meaning that the first element is the exponent of ``psi_1``, the second is the exponent of ``psi_2``, and so on.
 
 !!! note
 
@@ -397,7 +397,7 @@ function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
     return q1
 end
 """
-Equivariant class of the jet bundle J^p of the pull back of O(q) with respect to the first ``psi``-class.
+Equivariant class of the jet bundle ``J^p`` of the pull back of ``O(q)`` with respect to the first ``psi``-class.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -411,7 +411,7 @@ Equivariant class of the jet bundle J^p of the pull back of O(q) with respect to
 !!! note
 
     In order to define this bundle, the number of marks must be at least 1.
-    You cannot multiply this bundle by the class ``Psi``.
+    You cannot multiply this bundle by the class `Psi(g,c,w,s,m,a)`.
 
 
 # Example
