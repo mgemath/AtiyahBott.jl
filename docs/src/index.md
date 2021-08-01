@@ -7,6 +7,12 @@
 ```@docs
 AtiyahBott
 ```
+In order to install the package, type:
+```julia-repl
+julia> using Pkg
+julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
+```
+
 ## The function AtiyahBottFormula
 This is the main function of the package.
 ```@docs
@@ -14,15 +20,17 @@ AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bool = true
 ```
 
 ## Equivariant Classes
+Here we list all equivariant classes currently supported by the package.
 ```@docs
+Hypersurface
 O1_i
 O1
+Incidency
 Psi
 Jet
-Hypersurface
-Incidency
 Contact
 R1
+Euler_inv
 ```
 
 ## Other Functions

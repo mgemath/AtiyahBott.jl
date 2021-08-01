@@ -93,8 +93,8 @@ end
 
 Apply the Atiyah-Bott residue formula to the class `P`, in the moduli space of rational marked stable maps to the projective space of dimension `n` of degree `d` with `m` marks.
 # Arguments
-- `n::Int64`: the dimension of the projective space, it must be between 1 and 254.
-- `d::Int64`: the degree of the stable maps, it must be between 1 and 13.
+- `n::Int64`: the dimension of the projective space, it must be between ``1`` and ``254``.
+- `d::Int64`: the degree of the stable maps, it must be between ``1`` and ``13``.
 - `m::Int64`: the number of marks.
 - `P`: the equivariant class.
 - `do_check::Bool`: if `true`, checks if `P` is a well defined zero cycle, and stops the computation if this is not true. If `false`, the computation may have an unexpected behaviour. By default is `true`.
@@ -211,10 +211,8 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bo
         threshold) #threshold
 
     for v in 2:(deg+1) #run the computation among all graphs with fixed number of vertices
-                
-        n_trees_nv = number_trees[v - 1]  #we known how many graphs there are with fixed number of vertices
         
-        for n_g in 1:n_trees_nv  #run the computation for a fixed graph
+        for _ in 1:number_trees[v - 1]  #run the computation for a fixed graph
 
             str = readline(list_g) #read a new line, we expect a Prufer seq plus the number of automorphisms
             local (g, aut) = get_graph(str)  #g is the graph, aut is the number of automorphisms

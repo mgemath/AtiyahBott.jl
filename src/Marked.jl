@@ -20,16 +20,18 @@ The structure `marks` define the marked vertex of a graph.
 
 ####???????????????????
 function empty_mark()::marks
+
     return marks( 0, 0 , Dict{Int64, Int64}() )
 end
 # empty_mark = marks( 0, 0 , Dict{Int64, Int64}() )
 ####???????????????????
 
 function marks(v::Int64,m::Int64)::marks
-    return marks( v, m , Dict{Int64, Int64}() )
+
+    return marks(v, m , Dict{Int64, Int64}())
 end
 
-function Base.iterate(mark::marks, c=0)
+function Base.iterate(mark::marks, c=0)::Union{Nothing, Tuple{marks, Int64}}
     
     if mark.m == 0 && c == 1 
         return nothing
@@ -50,7 +52,7 @@ function Base.iterate(mark::marks, c=0)
 end
 
 
-function next_mark!(mark::marks, index::Int64)
+function next_mark!(mark::marks, index::Int64)::Nothing
     
     mark.get_vertex[index] += 1
     for i in 1:(index-1)
@@ -84,5 +86,8 @@ Return the number of marks assigned to some vertex v.
 - `v::Int64`: the vertex.
 """=#
 function num_marks(mark::marks, v::Int64)::Int64
-    return sum([mark.get_vertex[w] == v for w in 1:mark.m])
+    
+    mark.m == 0 && return 0
+
+    return count(w -> mark.get_vertex[w] == v, 1:mark.m)
 end

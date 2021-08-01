@@ -20,6 +20,15 @@ Equivariant class of the cycle parameterizing curves meeting a linear subspace o
 - `r::Int64`: the codimension of the subvariety. Alternatively, it can be an array of integers, meaning the multiplication of the equivariant class defined by each element of the array.
 
 # Example
+The following Gromov-Witten invariants
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{3},1)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{3})^{2} &= 1 \\\\
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{3},1)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{2})^{2}\\cdot \\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{3}) &= 1 \\\\
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{3},3)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{2})^{2}\\cdot \\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(3))) &= 756 \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
 julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,3)^2;
 julia> AtiyahBottFormula(3,1,0,P);
@@ -76,6 +85,16 @@ Equivariant class of the Euler class of the bundle equal to the direct image und
 - `b::Int64`: the degrees of the hypersurface. Alternatively, it can be an array of integers, meaning the multiplication of the equivariant class defined by each element of the array.
 
 # Example
+The following Gromov-Witten invariants of Calabi-Yau threefolds
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{4},1)}\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{4}}(5))) &= 2875 \\\\
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{5},2)}\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{5}}(3))^{\\oplus 2}) &= \\frac{423549}{8} \\\\
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{5},3)}\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{5}}(4)))\\cdot\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{5}}(2))) &= \\frac{422690816}{27} \\\\
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{7},4)}\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{7}}(2)))^4 &= 25705160 \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
 julia> P = (g,c,w,s,m) -> Hypersurface(g,c,w,s,5);
 julia> AtiyahBottFormula(4,1,0,P);
@@ -137,6 +156,12 @@ Equivariant class of the Euler class of the bundle equal to the direct image und
 - `s::Rational{BigInt}`: the scalars.
 
 # Example
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,2}(\\mathbb{P}^{3},1)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{2}\\cdot\\mathrm{ev}_{2}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{3}\\cdot\\mathrm{c_{top}}(\\delta_{*}(\\omega_{\\delta}\\otimes\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(2))) &= 1 \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
 julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)^2*O1_i(g,c,w,s,m,2)^3*Contact(g,c,w,s);
 julia> AtiyahBottFormula(3,1,2,P);
@@ -218,6 +243,14 @@ Equivariant class of the pull-back of ``O(1)`` with respect to the product of al
 This function is equivalent to the product of the function `O1_i(g,c,w,s,m,i)` where `i` runs from 1 to the number of marks.
 
 # Example
+The following Gromov-Witten invariants
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,8}(\\mathbb{P}^{2},3)}\\prod_{i=1}^{8}\\mathrm{ev}_{i}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1) &= 12 \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{3},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^2\\cdot\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(3))) &= 81 \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
 julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m);
 julia> AtiyahBottFormula(2,3,8,P);
@@ -257,10 +290,17 @@ The equivariant class of the first derived functor of the pull-back of ``O(-k)``
 - `k::Int64`: a positive integer.
 
 # Example
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,0}(\\mathbb{P}^{1},d)}\\mathrm{c_{top}}(R^{1}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(-1)))^2 &= \\frac{1}{d^3} \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
+julia> d = 1; #for other values of d, change this line
 julia> P = (g,c,w,s,m) -> R1(g,c,w,s,1)^2;
-julia> AtiyahBottFormula(1,3,0,P);
-Result: 1//27
+julia> AtiyahBottFormula(1,d,0,P);
+Result: 1//1
 ```
 !!! warning "Attention!"
 
@@ -312,6 +352,18 @@ Equivariant class of the cycle of ``psi``-classes.
     * `a` contains a negative number.
 
 # Example
+The following Gromov-Witten invariants
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,2}(\\mathbb{P}^{6},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{6}}(1)^{5}\\cdot\\mathrm{ev}_{2}^{*}\\mathcal{O}_{\\mathbb{P}^{6}}(1)^{2}\\cdot\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{6}}(5)))\\cdot\\psi_{1}\\psi_{2}^{0} &= 495000 \\\\
+\\int_{\\overline{M}_{0,2}(\\mathbb{P}^{10},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{10}}(1)^{8}\\cdot\\mathrm{ev}_{2}^{*}\\mathcal{O}_{\\mathbb{P}^{10}}(1)^{6}\\cdot\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{10}}(7)))\\cdot\\psi_{1}^{2} &= 71804533752 \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}\\cdot\\psi_{1}^{4} &= \\frac{1}{8} \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2})^{4}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)\\cdot(\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)+\\psi_{1}) &= 2 \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}\\cdot(\\psi_{1}^{3}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)+\\psi_{1}^{2}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}) &= \\frac{1}{8} \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{3},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)\\cdot(\\psi_{1}^{7}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)+\\psi_{1}^{6}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}) &= -\\frac{5}{16} \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
 julia> P = (g,c,w,s,m) -> O1_i(g,c,w,s,m,1)^5*O1_i(g,c,w,s,m,2)^2*Hypersurface(g,c,w,s,5)*Psi(g,c,w,s,m,[1,0]);
 julia> AtiyahBottFormula(6,2,2,P);
@@ -325,6 +377,12 @@ Result: 1//8
 julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*O1_i(g,c,w,s,m,1)*(O1_i(g,c,w,s,m,1) + Psi(g,c,w,s,m,1))
 julia> AtiyahBottFormula(2,2,1,P); #number of plane conics through four points and tangent to a line
 Result: 2
+julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)^2*(Psi(g,c,w,s,m,3)*O1(g,c,w,s,m)+Psi(g,c,w,s,m,2)*O1(g,c,w,s,m)^2);
+julia> AtiyahBottFormula(2,2,1,P);
+Result: 1//8
+julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)*(Psi(g,c,w,s,m,7)*O1(g,c,w,s,m)+Psi(g,c,w,s,m,6)*O1(g,c,w,s,m)^2);
+julia> AtiyahBottFormula(3,2,1,P);
+Result: -5//16
 ```
 !!! warning "Psi is singleton!"
 
@@ -343,12 +401,6 @@ Result: 2
     julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)^2*Psi(g,c,w,s,m,4);
     julia> AtiyahBottFormula(2,2,1,P);
     Result: 1//8
-    julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)^2*(Psi(g,c,w,s,m,3)*O1(g,c,w,s,m)+Psi(g,c,w,s,m,2)*O1(g,c,w,s,m)^2);
-    julia> AtiyahBottFormula(2,2,1,P);
-    Result: 1//8
-    julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)*(Psi(g,c,w,s,m,7)*O1(g,c,w,s,m)+Psi(g,c,w,s,m,6)*O1(g,c,w,s,m)^2);
-    julia> AtiyahBottFormula(3,2,1,P);
-    Result: -5//16
     ```
 """
 function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks, a::Int64)::Rational{BigInt}
@@ -424,6 +476,14 @@ Equivariant class of the jet bundle ``J^p`` of the pull back of ``O(q)`` with re
 
 
 # Example
+```math
+\\begin{aligned}
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2})^{4}\\cdot\\mathrm{c_{top}}(J^{1}(\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1))) &= 2 \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2})^{4}\\cdot(\\mathrm{c_{top}}(J^{1}(\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)))+\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}) &= 3 \\\\
+\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{3},d)}\\frac{\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(1)^{2}}{k}\\cdot\\mathrm{c_{top}}(J^{4d-2}(\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{3}}(k))) &= \\frac{(4d-2)!}{(d!)^{4}} \\\\
+\\end{aligned}
+```
+can be computed as
 ```julia-repl
 julia> P = (g,c,w,s,m) -> Incidency(g,c,w,s,2)^4*Jet(g,c,w,s,m,1,1);
 julia> AtiyahBottFormula(2,2,1,P);

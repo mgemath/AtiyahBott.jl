@@ -57,8 +57,8 @@ function exists_file_with_colorings(pruf_str::String, n::Int64)::Tuple{Bool,Unio
     
     dir = dirname(current_dir)*"/Data/Dimension$n/" #path of the folder containing the colorations
 
-    if isdir( dir ) && pruf_str*"z.gz" in readdir( dir )
-        return true, dir*pruf_str*"z.gz"
+    if isdir( dir ) && pruf_str*"0.gz" in readdir( dir )
+        return true, dir*pruf_str*"0.gz"
     else
         return false, nothing
     end
@@ -93,7 +93,7 @@ end
 
 function Base.iterate(GC::graph_coloring, c=0)::Union{Nothing, Tuple{Vector{UInt8}, Int64}}
 
-    if GC.current_color == []
+    if GC.current_color == UInt8[]
         GC.current_color = smallest_coloring( GC.graph, GC.num_cols )
         return GC.current_color, 0
     end
@@ -167,7 +167,8 @@ function get_graph(str::String)::Tuple{SimpleGraph{Int64}, Int64}
 
     s = split(str, ',')
     g = PruferToGraph(UInt8[ Read[string(s[1][i])] for i in 1:length(s[1])]) #get the graph
-    a = parse(Int64,s[2])       
+    a = parse(Int64,s[2]) 
+
     return (g, a)
 end
 #=
@@ -175,5 +176,6 @@ end
 Return all the arrays of length `l` such that the sum of all elements of the array is `d`.
 """=#
 function get_weights(l::Int64, d::Int64)::Vector{Vector{Int64}}
+
     return vcat(unique.(permutations.(partitions(d,l)))...)
 end
