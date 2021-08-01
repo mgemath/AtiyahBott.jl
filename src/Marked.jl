@@ -89,5 +89,5 @@ function num_marks(mark::marks, v::Int64)::Int64
     
     mark.m == 0 && return 0
 
-    return count(w -> mark.get_vertex[w] == v, 1:mark.m)
+    return count(t -> mark.get_vertex[t] == v, 1:mark.m)
 end

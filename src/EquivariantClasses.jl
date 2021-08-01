@@ -505,6 +505,7 @@ function Jet(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
     return s1
 end
 
+
 """
 The inverse of the (equivariant) Euler class of the normal bundle.
 # Arguments
