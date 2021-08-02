@@ -147,14 +147,16 @@ Result: 84//1
 
 More examples are available in the support of the equivariant classes. It is enough to type `?` and then the name of the class. Currently, the supported classes are:
 
-* `O1_i`         (Euler class of ``ev^*O(1)``, where ``ev`` is a specific evaluation map)
+* `O1_i`         (Euler class of ``\\mathrm{ev}_i^*\\mathcal{O}_{\\mathbb{P}^n}(1)``)
 * `O1`           (product of all `O1_i`)
-* `Psi`          (cycle of ``psi``-classes)
-* `Jet`          (Euler class of the jet bundle ``J^p`` of ``ev^*O(q)``)
-* `Hypersurface` (Euler class of the direct image of ``ev^*O(b)``)
+* `Psi`          (cycle of ``\\psi``-classes)
+* `Jet`          (Euler class of the jet bundle ``J^p`` of ``\\mathrm{ev}^*\\mathcal{O}_{\\mathbb{P}^n}(q)``)
+* `Hypersurface` (Euler class of the direct image of ``\\mathrm{ev}^*\\mathcal{O}_{\\mathbb{P}^n}(b)``)
 * `Incidency`    (cycle parameterizing curves meeting a linear subspace)
 * `Contact`      (cycle parameterizing contact curves)
-* `R1`           (first derived functor of direct image of ``ev^*O(-k)``)
+* `R1`           (first derived functor of direct image of ``\\mathrm{ev}^*\\mathcal{O}_{\\mathbb{P}^n}(-k)``)
+
+To add more classes, please contact the authors.
 """
 function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bool = true, show_bar::Bool = true, down_col::Bool = true)::Vector{Rational{BigInt}}
     

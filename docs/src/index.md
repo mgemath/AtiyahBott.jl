@@ -12,7 +12,10 @@ In order to install the package, type:
 julia> using Pkg
 julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
 ```
-
+To load the package, type:
+```julia-repl
+julia> using AtiyahBott
+```
 ## The function AtiyahBottFormula
 This is the main function of the package.
 ```@docs

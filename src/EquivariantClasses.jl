@@ -6,11 +6,14 @@ export
     O1,
     R1,
     Psi,
-    Jet
+    Jet,
+    Euler_inv
 
 using LightGraphs: SimpleEdge
 
 """
+    Incidency(g, c, w, s, r)
+
 Equivariant class of the cycle parameterizing curves meeting a linear subspace of codimension `r`.
 # Arguments
 - `g::SimpleGraph`: the graph.
@@ -76,7 +79,9 @@ end
 
 
 """
-Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of ``ev^*O(b)``. It parameterizes curves contained in a hypersurface of degree `b`.
+    Hypersurface(g, c, w, s, b)
+
+Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of ``\\mathrm{ev}^*\\mathcal{O}_{\\mathbb{P}^n}(b)``. It parameterizes curves contained in a hypersurface of degree `b`.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -148,7 +153,9 @@ end
 
 
 """
-Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of: ``ev^*O(2)`` tensor the dualizing sheaf of the forgetful map. It parameterizes contact curves in an odd dimensional projective space.
+    Contact(g, c, w, s)
+
+Equivariant class of the Euler class of the bundle equal to the direct image under the forgetful map of ``\\mathrm{ev}^*\\mathcal{O}_{\\mathbb{P}^n}(2)`` tensor the dualizing sheaf of the forgetful map. It parameterizes contact curves in an odd dimensional projective space.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -192,7 +199,9 @@ end
 
 
 """
-Equivariant class of the pull-back of ``O(1)`` with respect to the i-th evaluation map.
+    O1_i(g, c, w, s, m, i)
+
+Equivariant class of the pull-back of ``\\mathcal{O}_{\\mathbb{P}^n}(1)`` with respect to the i-th evaluation map.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -232,7 +241,9 @@ end
 
 
 """
-Equivariant class of the pull-back of ``O(1)`` with respect to the product of all evaluation maps.
+    O1(g, c, w, s, m)
+
+Equivariant class of the pull-back of ``\\mathcal{O}_{\\mathbb{P}^n}(1)`` with respect to the product of all evaluation maps.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -281,7 +292,9 @@ function O1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars:
 end
 
 """
-The equivariant class of the first derived functor of the pull-back of ``O(-k)``.
+    R1(g, c, w, s, k)
+
+The equivariant class of the first derived functor of the pull-back of ``\\mathcal{O}_{\\mathbb{P}^n}(-k)``.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -330,19 +343,21 @@ function R1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars:
 end
 
 """
-Equivariant class of the cycle of ``psi``-classes.
+    Psi(g, c, w, s, m, a)
+
+Equivariant class of the cycle of ``\\psi``-classes.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
 - `m::marks`: the marks.
-- `a::Vector{Int64}`: the vector of the exponents of the ``psi`` classes. It is ordered, meaning that the first element is the exponent of ``psi_1``, the second is the exponent of ``psi_2``, and so on.
+- `a::Vector{Int64}`: the vector of the exponents of the ``\\psi`` classes. It is ordered, meaning that the first element is the exponent of ``\\psi_1``, the second is the exponent of ``\\psi_2``, and so on.
 
 !!! note
 
     The size of `a` must be at most `m`. If it is smaller, missing exponents will be considered as zeros.
-    If `a` is a number, it will be considered as the exponent of ``psi_1``.
+    If `a` is a number, it will be considered as the exponent of ``\\psi_1``.
 
 !!! warning "Attention!"
 
@@ -458,7 +473,9 @@ function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
     return q1
 end
 """
-Equivariant class of the jet bundle ``J^p`` of the pull back of ``O(q)`` with respect to the first ``psi``-class.
+    Jet(g, c, w, s, m, p, q)
+
+Equivariant class of the jet bundle ``J^p`` of the pull back of ``\\mathcal{O}_{\\mathbb{P}^n}(q)`` with respect to the first ``\\psi``-class.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
@@ -507,6 +524,8 @@ end
 
 
 """
+    Euler_inv(g, c, w, s, m)
+
 The inverse of the (equivariant) Euler class of the normal bundle.
 # Arguments
 - `g::SimpleGraph`: the graph.
@@ -514,6 +533,7 @@ The inverse of the (equivariant) Euler class of the normal bundle.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
 - `m::marks`: the marks.
+
 """
 function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks)::Rational{BigInt}
    
@@ -566,9 +586,9 @@ function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, s
     return V*E
 end
 
-#############################
-###List of the class useful for computing the rank
-#############################
+#####################################################
+###List of the class useful for computing the rank###
+#####################################################
 function Incidency(n::Int64, deg::Int64, c::Int64, s::Int64, r::Int64)::Cycle
 
     try

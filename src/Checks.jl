@@ -223,7 +223,7 @@ function fill_Data(n::Int64, d::Int64)::Bool
     close(list_g)
 
     if !isempty(list_miss)
-        prog = ProgressUnknown("Downloading colorations...", spinner=true, color=:white)
+        prog = ProgressUnknown("Downloading colorations...                   ", spinner=true, color=:white)
         for name_file in list_miss
             next!(prog)
             url = "https://raw.githubusercontent.com/mgemath/Colorations/main/Dimension$n/$name_file"
@@ -231,14 +231,13 @@ function fill_Data(n::Int64, d::Int64)::Bool
             try
                 Downloads.download(url, dest)
             catch e
-                finish!(prog, desc = "Download failed           ", spinner = '✗')
+                finish!(prog, desc = "Download failed                              ", spinner = '✗')
                 printstyled(stderr,"ERROR: ", bold=true, color=:red)
                 printstyled(stderr,sprint(showerror,e), color=:light_red)
                 println(stderr)
                 final_state = false
                 break  #end for n_g
             end
-            final_state || break
         end
 
         if final_state
