@@ -175,13 +175,13 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bo
         println("m must be non negative, correct ", n_marks)
         return [Rational{BigInt}(0)]
     end
+    
     if !isa(P, Array)  #we want that P is an array, possibly with only one element
         P = [P]
     end
-    if do_check
-        if !is_zero_cycle(n, deg, n_marks, P)
-            return [Rational{BigInt}(0)]
-        end
+
+    if do_check && !is_zero_cycle(n, deg, n_marks, P)
+        return [Rational{BigInt}(0)]
     end
 
     if down_col && !fill_Data(n, deg)

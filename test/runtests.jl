@@ -46,7 +46,7 @@ d = 4 #for other values of d, change this line
 P = (g,c,w,s,m) -> R1(g,c,w,s,1)^2
 res = AtiyahBottFormula(1,d,0,P,true,true,false)
 
-if res == [ 1//32 ]
+if res == [ 1//64 ]
     @test true
 else
     @test false

@@ -568,7 +568,7 @@ function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, s
                 p1 *= scalars[col[v]]-scalars[j]
             end
         end
-        p1 = p1^(length(nghbrs)-1)
+        p1 ^= length(nghbrs)-1
         
         local s1 = Rational{BigInt}(0)
         local r1 = Rational{BigInt}(1)

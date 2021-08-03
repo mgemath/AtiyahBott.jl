@@ -31,7 +31,7 @@ function marks(v::Int64,m::Int64)::marks
     return marks(v, m , Dict{Int64, Int64}())
 end
 
-function Base.iterate(mark::marks, c=0)::Union{Nothing, Tuple{marks, Int64}}
+function Base.iterate(mark::marks, c::Int64 = 0)::Union{Nothing, Tuple{marks, Int64}}
     
     if mark.m == 0 && c == 1 
         return nothing

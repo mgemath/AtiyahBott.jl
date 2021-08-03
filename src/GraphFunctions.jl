@@ -91,7 +91,7 @@ function smallest_coloring(G::SimpleGraph, num_cols::UInt8)::Array{UInt8,1}
 end
 
 
-function Base.iterate(GC::graph_coloring, c=0)::Union{Nothing, Tuple{Vector{UInt8}, Int64}}
+function Base.iterate(GC::graph_coloring, ::Int64 = 0)::Union{Nothing, Tuple{Vector{UInt8}, Int64}}
 
     if GC.current_color == UInt8[]
         GC.current_color = smallest_coloring( GC.graph, GC.num_cols )
