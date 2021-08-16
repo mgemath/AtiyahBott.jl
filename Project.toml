@@ -1,7 +1,7 @@
 name = "AtiyahBott"
 uuid = "4bc0d046-1179-4daa-900a-9bc021c7f891"
 authors = ["Giosuè Muratore <muratore.g.e@gmail.com >", "Csaba Schneider <csaba.schneider@gmail.com>"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"

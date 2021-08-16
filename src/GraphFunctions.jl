@@ -15,8 +15,8 @@ mutable struct graph_coloring
     current_color::Array{UInt8,1}
 end
 
-function graph_coloring( G::SimpleGraph, num_cols::UInt8 )::graph_coloring
-    return graph_coloring( G, num_cols, UInt8[] )
+function graph_coloring(G::SimpleGraph, num_cols::UInt8)::graph_coloring
+    return graph_coloring(G, num_cols, UInt8[])
 end
 
 mutable struct graph_coloring_from_file
@@ -33,23 +33,26 @@ end
 # end
 
 
-function graph_coloring_from_file( file_name::String )::graph_coloring_from_file
+function graph_coloring_from_file(file_name::String)::graph_coloring_from_file
+
     color_file_gz = GzipDecompressorStream(open(file_name))
-    return graph_coloring_from_file( file_name, color_file_gz, UInt8[], 1 )
+
+    return graph_coloring_from_file(file_name, color_file_gz, UInt8[], 1)
 end
 
-function Base.iterate( GC::graph_coloring_from_file, c=0 )::Union{Nothing, Tuple{Vector{UInt8}, Int64}}
+function Base.iterate( GC::graph_coloring_from_file, ::Int64 = 0)::Union{Nothing, Tuple{Vector{UInt8}, Int64}}
 
-    st = readline( GC.color_file_gz )
+    st = readline(GC.color_file_gz)
     if st == "STOP" 
-        close( GC.color_file_gz )
+        close(GC.color_file_gz)
         return nothing
     end 
     
-    st = split( st, "," )
+    st = split(st, ",")
     #GC.current_color = [ parse( UInt8, Read[x] ) for x in split( st[1], "" )]
-    GC.current_color = [ UInt8(Read[x]) for x in split( st[1], "" )]
-    GC.current_aut = parse( Int64, st[2] )
+    GC.current_color = [UInt8(Read[x]) for x in split(st[1], "")]
+    GC.current_aut = parse(Int64, st[2])
+
     return GC.current_color, 0
 end
 
@@ -57,7 +60,7 @@ function exists_file_with_colorings(pruf_str::String, n::Int64)::Tuple{Bool,Unio
     
     dir = dirname(current_dir)*"/Data/Dimension$n/" #path of the folder containing the colorations
 
-    if isdir( dir ) && pruf_str*"0.gz" in readdir( dir )
+    if isdir(dir) && pruf_str*"0.gz" in readdir(dir)
         return true, dir*pruf_str*"0.gz"
     else
         return false, nothing
@@ -69,7 +72,7 @@ function is_coloring(G::SimpleGraph, cols::Array{UInt8,1})::Bool
     num_v = nv( G )
     for i in 1:num_v
         for j in (i+1):num_v
-            if cols[i] == cols[j] && has_edge( G, i, j ) 
+            if cols[i] == cols[j] && has_edge(G, i, j) 
                 return false
             end
         end
@@ -80,31 +83,31 @@ end
 
 function smallest_coloring(G::SimpleGraph, num_cols::UInt8)::Array{UInt8,1}
 
-    cols = [ 0x1 for _ in 1:nv(G)]
+    cols = ones(UInt8,nv(G))
     while true
-        if is_coloring( G, cols )
+        if is_coloring(G, cols)
             return cols
         end
 
-        next_tuple!( cols, num_cols )
+        next_tuple!(cols, num_cols)
     end
 end
 
 
 function Base.iterate(GC::graph_coloring, ::Int64 = 0)::Union{Nothing, Tuple{Vector{UInt8}, Int64}}
 
-    if GC.current_color == UInt8[]
-        GC.current_color = smallest_coloring( GC.graph, GC.num_cols )
+    if isempty(GC.current_color)
+        GC.current_color = smallest_coloring(GC.graph, GC.num_cols)
         return GC.current_color, 0
     end
 
     while true
-        v = next_tuple!( GC.current_color, GC.num_cols )
+        v = next_tuple!(GC.current_color, GC.num_cols)
         if v == false
             return nothing
         end
 
-        if is_coloring( GC.graph, GC.current_color )
+        if is_coloring(GC.graph, GC.current_color)
             return GC.current_color, 0
         end
 
@@ -112,9 +115,9 @@ function Base.iterate(GC::graph_coloring, ::Int64 = 0)::Union{Nothing, Tuple{Vec
 end
     
 
-function next_tuple!( tuple::Array{UInt8,1}, max_entry::UInt8 )::Union{Nothing, Bool}
+function next_tuple!(tuple::Array{UInt8,1}, max_entry::UInt8)::Union{Nothing, Bool}
 
-    k = length( tuple )
+    k = length(tuple)
     for k in k:-1:0
 
         if k == 0  
@@ -166,7 +169,7 @@ Extract a Prufer sequence and a number from a string. The number is the number o
 function get_graph(str::String)::Tuple{SimpleGraph{Int64}, Int64}
 
     s = split(str, ',')
-    g = PruferToGraph(UInt8[ Read[string(s[1][i])] for i in 1:length(s[1])]) #get the graph
+    g = PruferToGraph(UInt8[Read[string(s[1][i])] for i in 1:length(s[1])]) #get the graph
     a = parse(Int64,s[2]) 
 
     return (g, a)

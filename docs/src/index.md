@@ -10,7 +10,7 @@ AtiyahBott
 In order to install the package, type:
 ```julia-repl
 julia> using Pkg
-julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
+julia> Pkg.add("AtiyahBott")
 ```
 To load the package, type:
 ```julia-repl

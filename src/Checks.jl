@@ -167,14 +167,14 @@ function check_Data()::Nothing
         println(current_dir," contains:")
         files = [x for x in readdir(data_dir*current_dir)]
         for v in 2:14
-            num = count(x->length(x)==v+3 && endswith(x,".gz"), files)
+            num = count(x->length(x) == v+2 && endswith(x,".gz"), files)
             if num == 0
-                println( "No colored graphs with ", v, " vertices.")
+                println("No colored graphs with ", v, " vertices.")
                 continue
             elseif num < number_trees[v-1]
-                println("Some colored graph with ",v," vertices is missing.")
+                println("Some colored graph with ", v, " vertices is missing.")
             else
-                println("All colored graph with ",v," vertices.")
+                println("All colored graphs with ", v, " vertices.")
             end
             
         end
@@ -225,13 +225,13 @@ function fill_Data(n::Int64, d::Int64)::Bool
     if !isempty(list_miss)
         prog = ProgressUnknown("Downloading colorations...                   ", spinner=true, color=:white)
         for name_file in list_miss
-            next!(prog)
+            next!(prog, spinner = ['-','\\','|','/'])
             url = "https://raw.githubusercontent.com/mgemath/Colorations/main/Dimension$n/$name_file"
             dest = Dim_dir*"/$name_file"
             try
                 Downloads.download(url, dest)
             catch e
-                finish!(prog, desc = "Download failed                              ", spinner = '✗')
+                finish!(prog, desc = "Download failed                              ", spinner = 'X')
                 printstyled(stderr,"ERROR: ", bold=true, color=:red)
                 printstyled(stderr,sprint(showerror,e), color=:light_red)
                 println(stderr)
@@ -241,7 +241,7 @@ function fill_Data(n::Int64, d::Int64)::Bool
         end
 
         if final_state
-            finish!(prog, desc = "All missing colorations have been downloaded.")
+            finish!(prog, desc = "All missing colorations have been downloaded.", spinner = 'V')
         end
     end
 

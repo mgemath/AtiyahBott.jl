@@ -34,7 +34,7 @@ function AtiyahBottFormulaForGraph(g::SimpleGraph, pruf_str::String,
     local weights::Vector{Vector{Int64}} = get_weights(nv(g)-1, deg) #the array of array of weights
 
     local n_results::Int64 = length(P)   #this store the number of final results of our computation
-    local result::Vector{Rational{BigInt}} = [Rational{BigInt}(0) for _ in 1:n_results] #the array of final results
+    local result::Vector{Rational{BigInt}} = zeros(Rational{BigInt}, n_results) #the array of final results
     
     #for N in 1:n
 
@@ -55,7 +55,7 @@ function AtiyahBottFormulaForGraph(g::SimpleGraph, pruf_str::String,
                 #N+1 in cols.current_color || continue
             end
             
-            for m in marks(nv(g), n_marks)    #we run among all marks of g, if n_marks==0 we have only the empty mark
+            for m in Marks(nv(g), n_marks)    #we run among all marks of g, if n_marks==0 we have only the empty mark
                 for w in weights          #we run among all weights of g
                     try
                         local Euler::Rational{BigInt} = Euler_inv(g,c,w,s,m)//(aut*prod(w)) #the contribuition of the Euler class in the Atiyah-Bott formula
@@ -68,7 +68,7 @@ function AtiyahBottFormulaForGraph(g::SimpleGraph, pruf_str::String,
                         end
                         println(err)
                         error("Some error occurred")
-                        return [Rational{BigInt}(0) for _ in 1:n_results]
+                        return zeros(Rational{BigInt}, n_results)
                     end
                 end
 
@@ -194,7 +194,7 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bo
 
     
     local n_results::Int64 = length(P)   #this store the number of final results of our computation
-    local result::Vector{Rational{BigInt}} = [Rational{BigInt}(0) for _ in 1:n_results] #the array of final results
+    local result::Vector{Rational{BigInt}} = zeros(Rational{BigInt}, n_results) #the array of final results
     local max_col::Int64 = n+1   #the colors are number from 1 to n+1
      
     list_g::IOStream = open(current_dir*"/list_trees.txt") 

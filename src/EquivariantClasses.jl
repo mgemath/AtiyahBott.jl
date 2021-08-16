@@ -207,7 +207,7 @@ Equivariant class of the pull-back of ``\\mathcal{O}_{\\mathbb{P}^n}(1)`` with r
 - `c::Vector{UInt8}`: the coloration.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
-- `m::marks`: the marks.
+- `m::Marks`: the marks.
 - `i::Int64`: the evaluation map.
 
 # Example
@@ -232,7 +232,7 @@ Result: 4//1
     The program will stop if `i` is not between 1 and the number of marks.
 
 """
-function O1_i(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks, i::Int64)::Rational{BigInt}
+function O1_i(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::Marks, i::Int64)::Rational{BigInt}
     
     # col = Dict(vertices(g).=> coloration) #assing colors to vertices
     
@@ -249,7 +249,7 @@ Equivariant class of the pull-back of ``\\mathcal{O}_{\\mathbb{P}^n}(1)`` with r
 - `c::Vector{UInt8}`: the coloration.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
-- `m::marks`: the marks.
+- `m::Marks`: the marks.
 
 This function is equivalent to the product of the function `O1_i(g,c,w,s,m,i)` where `i` runs from 1 to the number of marks.
 
@@ -279,7 +279,7 @@ julia> P = (g,c,w,s,m) -> O1(g,c,w,s,m)//O1_i(g,c,w,s,m,1);
 ```
 Here `P` is the product of all `O1_i(g,c,w,s,m,i)` where `i` runs from 2 to `m`.
 """
-function O1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks)::Rational{BigInt}
+function O1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::Marks)::Rational{BigInt}
     
     local p1 = Rational{BigInt}(1)
     # col = Dict(vertices(g).=> coloration)
@@ -351,7 +351,7 @@ Equivariant class of the cycle of ``\\psi``-classes.
 - `c::Vector{UInt8}`: the coloration.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
-- `m::marks`: the marks.
+- `m::Marks`: the marks.
 - `a::Vector{Int64}`: the vector of the exponents of the ``\\psi`` classes. It is ordered, meaning that the first element is the exponent of ``\\psi_1``, the second is the exponent of ``\\psi_2``, and so on.
 
 !!! note
@@ -418,17 +418,19 @@ Result: -5//16
     Result: 1//8
     ```
 """
-function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks, a::Int64)::Rational{BigInt}
+function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::Marks, a::Int64)::Rational{BigInt}
     
     return Psi(g, col, weights, scalars, mark, [a])
 end
-function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks, a::Vector{Int64})::Rational{BigInt}
+function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::Marks, a::Vector{Int64})::Rational{BigInt}
     
-    if findfirst(x -> x>0, a) === nothing #if all of them are zero
+    if findfirst(x -> x>0, a) === nothing #if all of them are zero or a is empty
         return Rational{BigInt}(1)
     end
     
     local q1 = Rational{BigInt}(1)
+
+    local inv_marks::Dict{Int64,Vector{Int64}} = invert_marks(mark)
     
     for v in vertices(g)
         S_v = num_marks(mark, v)
@@ -439,7 +441,7 @@ function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
         d = Dict(edges(g).=> weights) #assign weights to edges
         
         if N == 2
-            i = invert_marks(mark)[v][1]
+            i = inv_marks[v][1]
             (i > length(a) || a[i] == 0) && continue
             w = nghbrs[1]
             e = SimpleEdge(v,w)
@@ -449,26 +451,24 @@ function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
         end
         #If no previous condition holds, then N>2
         if length(a) < mark.m #correct the dimension of a, if it is too low
-            a = vcat(a,[0 for _ in 1:(mark.m-length(a))])
+            a = vcat(a,zeros(Int64,mark.m-length(a)))
         end
-        a_v = [a[i] for i in invert_marks(mark)[v]]
+        a_v = [a[i] for i in inv_marks[v]]
         Sum_ai = sum(a_v)
         if Sum_ai > N-3
             return Rational{BigInt}(0)
         end
 
         local s1 = Rational{BigInt}(0)
-
-        omega_inv = Dict(edges(g).=> [d[e]//(scalars[col[src(e)]]-scalars[col[dst(e)]]) for e in edges(g)]) 
-        merge!(omega_inv,Dict(reverse.(edges(g)).=> [d[e]//(scalars[col[dst(e)]]-scalars[col[src(e)]]) for e in edges(g)]))
-
+        
         for w in nghbrs
-            s1 += omega_inv[SimpleEdge(v,w)]
+            e = (SimpleEdge(v,w) in edges(g)) ? SimpleEdge(v,w) : SimpleEdge(w,v)
+            s1 += d[e]//(scalars[col[v]]-scalars[col[w]])
         end
         s1 ^= -Sum_ai
         q1 *= multinomial(N-3-Sum_ai,a_v...)*s1
 
-        end
+    end
         
     return q1
 end
@@ -481,7 +481,7 @@ Equivariant class of the jet bundle ``J^p`` of the pull back of ``\\mathcal{O}_{
 - `c::Vector{UInt8}`: the coloration.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
-- `m::marks`: the marks.
+- `m::Marks`: the marks.
 - `p::Int64`: the exponent of the Jet bundle. In particular, it is a bundle of rank p+1.
 - `q::Int64`: the degree of the line bundle that is pulled back.
 
@@ -512,11 +512,11 @@ julia> P = (g,c,w,s,m) -> (O1(g,c,w,s,m)^2)//k*Jet(g,c,w,s,m,4*d-2,k);
 julia> d=1;k=1;AtiyahBottFormula(3,d,1,P);   #The value of this integral does not depend on k, only on d
 ```
 """
-function Jet(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks, p::Int64, q::Int64)::Rational{BigInt}
+function Jet(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::Marks, p::Int64, q::Int64)::Rational{BigInt}
     
     local s1 = Rational{BigInt}(0)
     for h in 0:p
-        s1 += stirlings1(p+1, p+1-h)*(q*O1_i(g, col, weights, scalars, mark,1))^(p+1-h)*Psi(g, col, weights, scalars, mark,[h])
+        s1 += stirlings1(p+1, p+1-h)*(q*O1_i(g, col, weights, scalars, mark, 1))^(p+1-h)*Psi(g, col, weights, scalars, mark, [h])
     end
 
     return s1
@@ -526,16 +526,16 @@ end
 """
     Euler_inv(g, c, w, s, m)
 
-The inverse of the (equivariant) Euler class of the normal bundle.
+The inverse of the (equivariant) Euler class of the normal bundle. This function is invoked automatically.
 # Arguments
 - `g::SimpleGraph`: the graph.
 - `c::Vector{UInt8}`: the coloration.
 - `w::Vector{Int64}`: the weights.
 - `s::Rational{BigInt}`: the scalars.
-- `m::marks`: the marks.
+- `m::Marks`: the marks.
 
 """
-function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::marks)::Rational{BigInt}
+function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{Rational{BigInt}}, mark::Marks)::Rational{BigInt}
    
     local V = Rational{BigInt}(1)
     local E = Rational{BigInt}(1)

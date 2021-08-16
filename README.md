@@ -10,7 +10,7 @@ Full documentation is available here: https://mgemath.github.io/AtiyahBott.jl/.
 In order to install this package, type:
 ```julia
 julia> using Pkg
-julia> Pkg.add(url="https://github.com/mgemath/AtiyahBott.jl")
+julia> Pkg.add("AtiyahBott")
 ```
 
 The installation will download automatically all colorations up to degree 4 and dimension 4 from here: https://github.com/mgemath/Colorations.
