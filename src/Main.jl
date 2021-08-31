@@ -200,8 +200,8 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bo
     list_g::IOStream = open(current_dir*"/list_trees.txt") 
     #open the file containing the list of Prufer sequences of graphs
 
-    s::Vector{Rational{BigInt}} = convert(Vector{Rational{BigInt}},rand(-1000*max_col*deg:1000*max_col*deg,max_col)) 
-
+    #s::Vector{Rational{BigInt}} = convert(Vector{Rational{BigInt}},rand(-1000*max_col*deg:1000*max_col*deg,max_col)) 
+    s::Vector{Rational{BigInt}} = Rational{BigInt}.(rand(UInt32,max_col))
     #set up progress data                                    
     threshold::Int64 = sum(v -> number_trees[v-1]*max_col*(n^(v-1))*(v^n_marks), 2:deg+1)
 

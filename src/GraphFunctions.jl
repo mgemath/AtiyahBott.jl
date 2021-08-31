@@ -142,7 +142,11 @@ function PruferToGraph(prufer::Vector{UInt8})::SimpleGraph
     num_v = length(prufer)+2 #number of vertices
     g = Graph(num_v) #initialize a graph with specific number of vertices
     
-    degree = [count(i->(i==j),prufer) for j in 1:num_v ] #new version of degree
+    degree::Vector{Int64} = zeros(Int64,num_v)
+
+    for i in 1:num_v-2
+        degree[prufer[i]] += 1
+    end
 
     for i in 1:(num_v-2)
         for j in 1:num_v
