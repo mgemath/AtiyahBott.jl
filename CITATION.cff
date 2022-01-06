@@ -2,31 +2,31 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Muratore"
-  given-names: "Giosuè"
+  given-names: "Giosue"
   orcid: "https://orcid.org/0000-0003-0038-1432"
 - family-names: "Schneider"
   given-names: "Csaba"
   orcid: "https://orcid.org/0000-0002-1035-9311"
 title: "AtiyahBott"
 version: 2.0.0
-doi: "00.0000/00000"
-date-released: 2022-01-21
+doi: 10.0000/00000
+date-released: 2017-12-18
 url: "https://github.com/mgemath/AtiyahBott.jl"
 preferred-citation:
   type: article
   authors:
-- family-names: "Muratore"
-  given-names: "Giosuè"
-  orcid: "https://orcid.org/0000-0003-0038-1432"
-- family-names: "Schneider"
-  given-names: "Csaba"
-  orcid: "https://orcid.org/0000-0002-1035-9311"
-  doi: "00.0000/00000"
-  journal: "arxiv.org/abs/2105.11183"
-  month: 0
-  start: 0
-  end: 0
+  - family-names: "Muratore"
+    given-names: "Giosue"
+    orcid: "https://orcid.org/0000-0003-0038-1432"
+  - family-names: "Schneider"
+    given-names: "Csaba"
+    orcid: "https://orcid.org/0000-0002-1035-9311"
+  doi: "10.0000/00000"
+  journal: "Arxiv preprint"
+  month: 9
+  start: 1 # First page number
+  end: 10 # Last page number
   title: "Effective computations of the Atiyah-Bott formula"
-  issue: 0
-  volume: 0
+  issue: 1
+  volume: 1
   year: 2021
