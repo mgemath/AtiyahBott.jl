@@ -9,7 +9,7 @@ authors:
   orcid: "https://orcid.org/0000-0002-1035-9311"
 title: "AtiyahBott"
 version: 2.0.0
-doi: 0
+doi: "00.0000/00000"
 date-released: 2022-01-21
 url: "https://github.com/mgemath/AtiyahBott.jl"
 preferred-citation:
@@ -21,7 +21,7 @@ preferred-citation:
 - family-names: "Schneider"
   given-names: "Csaba"
   orcid: "https://orcid.org/0000-0002-1035-9311"
-  doi: 0
+  doi: "00.0000/00000"
   journal: "arxiv.org/abs/2105.11183"
   month: 0
   start: 0
