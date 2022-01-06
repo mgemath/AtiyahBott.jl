@@ -19,7 +19,7 @@ julia> using AtiyahBott
 ## The function AtiyahBottFormula
 This is the main function of the package.
 ```@docs
-AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P, do_check::Bool = true, show_bar::Bool = true, down_col::Bool = true)
+AtiyahBottFormula
 ```
 
 ## Equivariant Classes
