@@ -107,13 +107,35 @@ julia> is_zero_cycle(4,1,0,P)
 true
 ```
 """
-function is_zero_cycle(n::Int64, deg::Int64, n_marks::Int64, P)::Bool
+function is_zero_cycle(n::Int64, deg::Int64, n_marks::Int64, P_input)::Bool
+
+    local n_results::Int64 = 0
+
+    if isa(P_input, Array)  #we want that P is an array, possibly with only one element
+        n_results = length(P_input)
+    else
+        n_results = 1
+        #P = [P]
+    end
+    local P::Vector{Function} = Vector(undef, n_results)
     
-    if !isa(P, Array)  #we want that P is an array, possibly with only one element
-        P = [P]
+    if isa(P_input, Array)  #we want that P is an array, possibly with only one element
+        if typeof(P_input[1]) == EquivariantClass
+            for res in eachindex(P)
+                P[res] = P_input[res].func
+            end
+        else
+            P = P_input
+        end
+    else
+        if typeof(P_input) == EquivariantClass
+            P[1] = P_input.func
+        else
+            P[1] = P_input
+        end
     end
 
-    for res in 1:length(P)
+    for res in eachindex(P)
         local P_cycle = P[res](n, deg, n_marks, 0, 0)
 
         if !P_cycle.valid
@@ -208,7 +230,7 @@ function fill_Data(n::Int64, d::Int64)::Bool
     local Dim_dir::String = dirname(current_dir)*"/Data/Dimension$n" #path of the folder containing the colorations
     mkpath(Dim_dir) #create the folder
 
-    list_g::IOStream = open(current_dir*"/list_trees.txt") 
+    list_g::IOStream = open(current_dir*"/list_trees.txt", "r") 
     #open the file containing the list of Prufer sequences of graphs
     for v in 2:(d+1) #run the computation among all graphs with fixed number of vertices
         for _ in 1:number_trees[v - 1]  #run the computation for a fixed graph

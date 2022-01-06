@@ -10,10 +10,11 @@ The full list is here: https://github.com/mgemath/Colorations/.
 module AtiyahBott
 
 using Combinatorics 
-using LightGraphs 
+using Graphs 
 using ProgressMeter
 using Downloads
 using CodecZlib
+using Nemo
 
 const current_dir = @__DIR__
 
@@ -22,6 +23,7 @@ include("GraphFunctions.jl")
 include("EquivariantClasses.jl")
 include("Checks.jl")
 include("Main.jl")
+include("NemoFunctions.jl")
 
 
 end # module

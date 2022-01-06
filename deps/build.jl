@@ -3,7 +3,7 @@ using Downloads
 const current_dir = @__DIR__
 const number_trees = [1, 1, 2, 3, 6, 11, 23, 47, 106, 235, 551, 1301, 3159]
 
-list_g = open(dirname(current_dir)*"/src/list_trees.txt") 
+list_g = open(dirname(current_dir)*"/src/list_trees.txt", "r") 
 for n in 1:4 #d=4
 
     Dim_dir::String = dirname(current_dir)*"/Data/Dimension$n" #path of the folder containing the colorations
