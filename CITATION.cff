@@ -9,7 +9,7 @@ authors:
   orcid: "https://orcid.org/0000-0002-1035-9311"
 title: "AtiyahBott"
 version: 2.0.0
-doi: 10.0000/00000
+doi: 10.1016/j.jsc.2022.01.005
 date-released: 2022-01-21
 url: "https://github.com/mgemath/AtiyahBott.jl"
 preferred-citation:
@@ -21,12 +21,13 @@ preferred-citation:
   - family-names: "Schneider"
     given-names: "Csaba"
     orcid: "https://orcid.org/0000-0002-1035-9311"
-  doi: "10.0000/00000"
-  journal: "Arxiv preprint"
-  month: 1
-  start: 1 # First page number
-  end: 2 # Last page number
+  doi: "10.1016/j.jsc.2022.01.005"
+  journal: "Journal of Symbolic Computation"
+  month: 
+  start: 164 # First page number
+  end: 181 # Last page number
   title: "Effective computations of the Atiyah-Bott formula"
-  issue: 1
-  volume: 1
-  year: 2021
+  issue: 
+  volume: 112
+  year: 2022
+  url: "https://www.sciencedirect.com/science/article/pii/S0747717122000050"
