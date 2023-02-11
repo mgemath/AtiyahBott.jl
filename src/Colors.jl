@@ -270,13 +270,13 @@ function end_of_subgraph_rev( ls::Vector{Int64}, r_dfs::Vector{Int64}, v::Int64 
     return end_ver === nothing ? r_dfs[end] : r_dfs[ps+end_ver-1]
 end 
 
-function my_end_of_subgraph_rev( ls::Vector{Int64}, r_dfs::Vector{Int64}, v::Int64 )::Int64
+# function my_end_of_subgraph_rev( ls::Vector{Int64}, r_dfs::Vector{Int64}, v::Int64 )::Int64
 
-    # position of v in r_dfs 
-    ps = findfirst( x -> r_dfs[x] == v, 1:length( ls ))
-    k = findfirst( i -> i == length(ls) || (i >= ps && ls[i+1] <= ls[v]), eachindex(r_dfs))
-    return r_dfs[k]
-end 
+#     # position of v in r_dfs 
+#     ps = findfirst( x -> r_dfs[x] == v, 1:length( ls ))
+#     k = findfirst( i -> i == length(ls) || (i >= ps && ls[i+1] <= ls[v]), eachindex(r_dfs))
+#     return r_dfs[k]
+# end 
 
 function my_has_central_involution( ls::Vector{Int64} )::Bool
 
