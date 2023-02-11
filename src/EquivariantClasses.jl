@@ -194,14 +194,14 @@ function Incidency( r )::EquivariantClass
     rule = :(Incidency( g, c, w, s, $r ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Incidency(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, r::Int64)::fmpq
+function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Int64)::fmpq
     
     local p1::fmpq = fmpq(0); #the final result
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     r -= 1                          
     
-    # col = Dict(vertices(g).=> coloration) #assign colors to vertices
+    # col = Dict(vertices(g).=> col) #assign colors to vertices
     d = Dict(edges(g).=> weights) #assign weights to edges
 
     for e in edges(g)
@@ -221,16 +221,16 @@ function Incidency(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, s
 
 end
 
-function Incidency(g::SimpleGraph, coloration::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, r::Vector{Int64})::fmpq
+function Incidency(g::SimpleGraph{Int64},col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Vector{Int64})::fmpq
     
     local p1::fmpq = fmpq(1)
     local temp1::fmpq = fmpq(1)
 
     for j in unique(r)
-        eq!(temp1, Incidency(g, coloration, weights, scalars, j))
+        eq!(temp1, Incidency(g, col, weights, scalars, j))
         pow_eq!(temp1, count(x->x==j, r))
         mul_eq!(p1, temp1)
-        # p1 *= Hypersurface(g, coloration, weights, scalars, j)^count(x->x==j, b)
+        # p1 *= Hypersurface(g, col, weights, scalars, j)^count(x->x==j, b)
     end
     return p1
 
@@ -280,14 +280,14 @@ function Hypersurface( b )::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function Hypersurface(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, b::Int64)::fmpq
+function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
 
     local p1::fmpq = fmpq(1)
     # local q1::fmpq = fmpq(1)
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     
-    # col = Dict(vertices(g).=> coloration) #assign colors to vertices
+    # col = Dict(vertices(g).=> col) #assign colors to vertices
     d = Dict(edges(g).=> weights) #assign weights to edges
     
     for e in edges(g)
@@ -317,16 +317,16 @@ function Hypersurface(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}
 
 end
 
-function Hypersurface(g::SimpleGraph, coloration::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, b::Vector{Int64})::fmpq
+function Hypersurface(g::SimpleGraph{Int64},col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Vector{Int64})::fmpq
 
     local p1::fmpq = fmpq(1)
     local temp1::fmpq = fmpq(1)
 
     for j in unique(b)
-        eq!(temp1, Hypersurface(g, coloration, weights, scalars, j))
+        eq!(temp1, Hypersurface(g, col, weights, scalars, j))
         pow_eq!(temp1, count(x->x==j, b))
         mul_eq!(p1, temp1)
-        # p1 *= Hypersurface(g, coloration, weights, scalars, j)^count(x->x==j, b)
+        # p1 *= Hypersurface(g, col, weights, scalars, j)^count(x->x==j, b)
     end
     return p1
 end
@@ -355,14 +355,14 @@ function Contact()::EquivariantClass
     rule = :(Contact( g, c, w, s))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Contact(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq})::fmpq
+function Contact(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}})::fmpq
 
     local p1::fmpq = fmpq(1)
     # local q1::fmpq = fmpq(1)
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     
-    # col = Dict(vertices(g).=> coloration) #assign colors to vertices
+    # col = Dict(vertices(g).=> col) #assign colors to vertices
     d = Dict(edges(g).=> weights) #assign weights to edges
     
     for e in edges(g)
@@ -390,7 +390,6 @@ function Contact(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, sca
     return p1
 
 end
-
 
 """
     O1_i(j)
@@ -426,8 +425,8 @@ function O1_i( j::Int64)::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function O1_i(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, mark::Vector{Int64}, j::Int64)::fmpq
-#function O1_i(col::Vector{UInt8}, scalars::Vector{fmpq}, mark::Vector{Int64}, j::Int64)::fmpq    
+function O1_i(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, j::Int64)::fmpq
+#function O1_i(col::Vector{UInt8}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, j::Int64)::fmpq    
     return scalars[col[mark[j]]]
 end
 
@@ -437,7 +436,7 @@ end
 
 Equivariant class of the pull-back of ``\\mathcal{O}_{\\mathbb{P}^n}(1)`` with respect to the product of all evaluation maps.
 
-This function is equivalent to the product of the function `O1_i(i)` where `i` runs from 1 to the number of marks.
+This function is equivalent to the product of the function `O1_i(j)` where `j` runs from 1 to the number of marks.
 
 # Example
 The following Gromov-Witten invariants
@@ -470,10 +469,10 @@ function O1()::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function O1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, mark::Vector{Int64})::fmpq
+function O1(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}})::fmpq
     
     local p1 = fmpq(1)
-    # col = Dict(vertices(g).=> coloration)
+    # col = Dict(vertices(g).=> col)
     
     for t in 1:length(mark)
         mul_eq!(p1, scalars[col[mark[t]]])
@@ -513,14 +512,14 @@ function R1( k )::EquivariantClass
     rule = :(R1( g, c, w, s, $k ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function R1(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, k::Int64)::fmpq
+function R1(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, k::Int64)::fmpq
     
     local p1 = fmpq(1)
     # local q1 = fmpq(1)
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     
-    # col = Dict(vertices(g).=> coloration) #assign colors to vertices
+    # col = Dict(vertices(g).=> col) #assign colors to vertices
     d = Dict(edges(g).=> weights) #assign weights to edges
     
     for e in edges(g)
@@ -577,7 +576,6 @@ The following Gromov-Witten invariants
 \\int_{\\overline{M}_{0,2}(\\mathbb{P}^{10},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{10}}(1)^{8}\\cdot\\mathrm{ev}_{2}^{*}\\mathcal{O}_{\\mathbb{P}^{10}}(1)^{6}\\cdot\\mathrm{c_{top}}(\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{10}}(7)))\\cdot\\psi_{1}^{2} &= 71804533752 \\\\
 \\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}\\cdot\\psi_{1}^{4} &= \\frac{1}{8} \\\\
 \\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\delta_{*}(\\mathrm{ev}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2})^{4}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)\\cdot(\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)+\\psi_{1}) &= 2 \\\\
-\\int_{\\overline{M}_{0,1}(\\mathbb{P}^{2},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}\\cdot(\\psi_{1}^{3}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)+\\psi_{1}^{2}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}) &= \\frac{1}{8} \\\\
 \\int_{\\overline{M}_{0,1}(\\mathbb{P}^{3},2)}\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)\\cdot(\\psi_{1}^{7}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)+\\psi_{1}^{6}\\cdot\\mathrm{ev}_{1}^{*}\\mathcal{O}_{\\mathbb{P}^{2}}(1)^{2}) &= -\\frac{5}{16} \\\\
 \\end{aligned}
 ```
@@ -595,9 +593,6 @@ Result: 1//8
 julia> P = Incidency(2)^4*O1_i(1)*(O1_i(1) + Psi(1));
 julia> AtiyahBottFormula(2,2,1,P); #number of plane conics through four points and tangent to a line
 Result: 2
-julia> P = O1()^2*(Psi(3)*O1()+Psi(2)*O1()^2);
-julia> AtiyahBottFormula(2,2,1,P);
-Result: 1//8
 julia> P = O1()*(Psi(7)*O1()+Psi(6)*O1()^2);
 julia> AtiyahBottFormula(3,2,1,P);
 Result: -5//16
@@ -626,11 +621,11 @@ function Psi( a )::EquivariantClass
     rule = :(Psi( g, c, w, s, m, $a ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, mark::Vector{Int64}, a::Int64)::fmpq
+function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, a::Int64)::fmpq
     
     return Psi(g, col, weights, scalars, mark, [a])
 end
-function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, mark::Vector{Int64}, a::Vector{Int64})::fmpq
+function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, a::Vector{Int64})::fmpq
         
     findfirst(x -> x>0, a) === nothing && return fmpq(1) #if all of them are zero or a is empty
     
@@ -668,12 +663,12 @@ function Psi(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
         local s1 = fmpq(0)
         
         for w in all_neighbors(g, v)
-            e = SimpleEdge(v,w)
-            d_e = haskey(d,e) ? d[e] : d[reverse(e)]
+            # e = SimpleEdge(v,w)
+            # d_e = haskey(d,e) ? d[e] : d[reverse(e)]
             eq!(temp1, scalars[col[w]])
             neg!(temp1)
             add_eq!(temp1, scalars[col[v]])
-            div_eq!(temp1, d_e)
+            div_eq!(temp1, d[SimpleEdge(min(v,w),max(v,w))])
             inv!(temp1)
             add_eq!(s1, temp1)
             # s1 += d_e//(scalars[col[v]]-scalars[col[w]])
@@ -694,7 +689,7 @@ end
 
 Equivariant class of the jet bundle ``J^p`` of the pull back of ``\\mathcal{O}_{\\mathbb{P}^n}(q)`` with respect to the first ``\\psi``-class.
 # Arguments
-- `p::Int64`: the exponent of the Jet bundle. In particular, it is a bundle of rank p+1.
+- `p::Int64`: the exponent of the Jet bundle. In particular, it is a bundle of rank ``p+1``.
 - `q::Int64`: the degree of the line bundle that is pulled back.
 
 
@@ -730,7 +725,7 @@ function Jet( p, q )::EquivariantClass
     rule = :(Jet( g, c, w, s, m, $p, $q ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Jet(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, mark::Vector{Int64}, p::Int64, q::Int64)::fmpq
+function Jet(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, p::Int64, q::Int64)::fmpq
     
     local s1::fmpq = fmpq(0)
     local temp1::fmpq = fmpq(1)
@@ -749,19 +744,19 @@ function Jet(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars
 end
 
 
-"""
-    Euler_inv(g, c, w, s, m)
+# """
+#     Euler_inv(g, c, w, s, m)
 
-The inverse of the (equivariant) Euler class of the normal bundle. This function is invoked automatically.
-# Arguments
-- `g::SimpleGraph`: the graph.
-- `c::Vector{UInt8}`: the coloration.
-- `w::Vector{Int64}`: the weights.
-- `s::Vector{fmpq}`: the scalars.
-- `m::Vector{Int64}`: the marks.
+# The inverse of the (equivariant) Euler class of the normal bundle. This function is invoked automatically.
+# # Arguments
+# - `g::SimpleGraph{Int64}`: the graph.
+# - `c::Vector{UInt8}`: the coloration.
+# - `w::Vector{Int64}`: the weights.
+# - `s::Tuple{Vararg{fmpq}}`: the scalars.
+# - `m::Vector{Int64}`: the marks.
 
-"""
-function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, scalars::Vector{fmpq}, mark::Vector{Int64})::fmpq
+# """
+function Euler_inv(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}})::fmpq
    
     local V::fmpq = fmpq(1)
     #local E::fmpq = fmpq(1)
@@ -770,7 +765,7 @@ function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, s
     local q1::fmpq
     local p1::fmpq    
     local s1::fmpq  
-    # col = Dict(vertices(g).=> coloration) #assing colors to vertices
+    # col = Dict(vertices(g).=> col) #assing colors to vertices
     d = Dict(edges(g).=> weights) #assign weights to edges
     #=
     omega_inv = Dict(edges(g).=> [d[e]//(scalars[col[src(e)]]-scalars[col[dst(e)]]) for e in edges(g)]) 
@@ -807,7 +802,8 @@ function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, s
         if isodd(d[e])
             neg!(temp1)
         end
-        mul_eq!(q1, factorial(d[e])^2)
+        q1 *= Nemo.factorial(fmpz(d[e]))^2
+        # mul_eq!(q1, Nemo.factorial(fmpz(d[e]))^2)
         #div_eq!(temp1, factorial(d[e])^2)
         div_eq!(temp1, q1)
         mul_eq!(V, temp1)
@@ -837,9 +833,10 @@ function Euler_inv(g::SimpleGraph, col::Vector{UInt8}, weights::Vector{Int64}, s
             neg!(temp1)
             add_eq!(temp1, scalars[col[v]])
             inv!(temp1)
-            e = SimpleEdge(v,w)
-            d_e = haskey(d,e) ? d[e] : d[reverse(e)]
-            mul_eq!(temp1, d_e)
+            # e = SimpleEdge(v,w)
+            # d_e = haskey(d,e) ? d[e] : d[reverse(e)]
+            # mul_eq!(temp1, d_e)
+            mul_eq!(temp1, d[SimpleEdge(min(v,w),max(v,w))])
             # e = SimpleEdge(v,w)
             add_eq!(s1, temp1)
             mul_eq!(V, temp1)

@@ -80,7 +80,7 @@ The codimension of the equivariant class `P`.
 
 # Example
 ```julia-repl
-julia> P = (g,c,w,s,m) -> Hypersurface(g,c,w,s,5);
+julia> P = Hypersurface(g,c,w,s,5);
 julia> codim(4,1,0,P)
 6
 ```
@@ -102,7 +102,7 @@ Return `true` if the equivariant class `P` is a 0-cycle in the moduli space, `fa
 
 # Example
 ```julia-repl
-julia> P = (g,c,w,s,m) -> Hypersurface(g,c,w,s,5);
+julia> P = Hypersurface(g,c,w,s,5);
 julia> is_zero_cycle(4,1,0,P)
 true
 ```
@@ -136,7 +136,7 @@ function is_zero_cycle(n::Int64, deg::Int64, n_marks::Int64, P_input)::Bool
     end
 
     for res in eachindex(P)
-        local P_cycle = P[res](n, deg, n_marks, 0, 0)
+        local P_cycle = Base.invokelatest( P[res], n, deg, n_marks, 0, 0)
 
         if !P_cycle.valid
             printstyled("Warning: ", bold=true, color=:light_yellow)
@@ -160,125 +160,4 @@ function is_zero_cycle(n::Int64, deg::Int64, n_marks::Int64, P_input)::Bool
         end
     end
     return true
-end
-
-"""
-    check_Data()
-
-List of all files containing the colorations in the folder Data.
-"""
-function check_Data()::Nothing
-
-    data_dir::String = dirname(current_dir)*"/Data/" #path of the folder Data
-    
-    if !isdir(data_dir)
-        println("Folder ", data_dir, " not found.")
-        return
-    end
-    
-    Dimension_dirs = [x for x in readdir(data_dir) if startswith(x,"Dimension")]
-    
-    if length(Dimension_dirs) == 0
-        println("""Folder "Data" is empty.""")
-        return
-    end
-    
-    println("""Folder "Data" found.""")
-    
-    for current_dir in Dimension_dirs
-        println(current_dir," contains:")
-        files = [x for x in readdir(data_dir*current_dir)]
-        for v in 2:14
-            num = count(x->length(x) == v+2 && endswith(x,".gz"), files)
-            if num == 0
-                println("No colored graphs with ", v, " vertices.")
-                continue
-            elseif num < number_trees[v-1]
-                println("Some colored graph with ", v, " vertices is missing.")
-            else
-                println("All colored graphs with ", v, " vertices.")
-            end
-            
-        end
-    end
-    
-    return nothing
-end
-
-"""
-    fill_Data(n, d)
-
-Download from internet all colorations used for computations in the moduli space with dimension `n` and degree `d`.
-Return `true` if there is no need to download any file or if all downloads go well. Otherwise, return `false`.
-"""
-function fill_Data(n::Int64, d::Int64)::Bool
-
-    if n < 1
-        printstyled("ERROR: ", bold=true, color=:red)
-        println("n must be positive, correct ", n)
-        return false
-    end
-    if d > 13 || d < 1
-        printstyled("ERROR: ", bold=true, color=:red)
-        println("d must be between 1 and 13, correct ", d)
-        return false
-    end
-
-    local list_miss::Vector{String} = String[]
-    local final_state::Bool = true
-    
-    local Dim_dir::String = dirname(current_dir)*"/Data/Dimension$n" #path of the folder containing the colorations
-    mkpath(Dim_dir) #create the folder
-
-    list_g::IOStream = open(current_dir*"/list_trees.txt", "r") 
-    #open the file containing the list of Prufer sequences of graphs
-    for v in 2:(d+1) #run the computation among all graphs with fixed number of vertices
-        for _ in 1:number_trees[v - 1]  #run the computation for a fixed graph
-            str = readline(list_g) #read a new line, we expect a Prufer seq plus the number of automorphisms
-            name_file = string(split(str, ',')[1],"0.gz")
-            if !(name_file in readdir(Dim_dir))
-                push!(list_miss, name_file)
-            end
-        end
-    end
-
-    close(list_g)
-
-    if !isempty(list_miss)
-        prog = ProgressUnknown("Downloading colorations...                   ", spinner=true, color=:white)
-        for name_file in list_miss
-            next!(prog, spinner = ['-','\\','|','/'])
-            url = "https://raw.githubusercontent.com/mgemath/Colorations/main/Dimension$n/$name_file"
-            dest = Dim_dir*"/$name_file"
-            try
-                Downloads.download(url, dest)
-            catch e
-                finish!(prog, desc = "Download failed                              ", spinner = 'X')
-                printstyled(stderr,"ERROR: ", bold=true, color=:red)
-                printstyled(stderr,sprint(showerror,e), color=:light_red)
-                println(stderr)
-                final_state = false
-                break  #end for n_g
-            end
-        end
-
-        if final_state
-            finish!(prog, desc = "All missing colorations have been downloaded.", spinner = 'V')
-        end
-    end
-
-    return final_state
-end
-
-
-"""
-    free_Data()
-
-Delete the folder Data.
-"""
-function free_Data()::Nothing
-
-    rm(dirname(current_dir)*"/Data/", force=true, recursive=true)
-
-    return nothing
 end

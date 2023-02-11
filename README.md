@@ -13,9 +13,6 @@ In order to install this package, type:
 julia> using Pkg
 julia> Pkg.add("AtiyahBott")
 ```
-
-The installation will download automatically all colorations up to degree 4 and dimension 4 from here: https://github.com/mgemath/Colorations.
-
 After the installation, simply type:
 ```julia
 julia> using AtiyahBott
@@ -36,7 +33,7 @@ The full list of the currently supported equivariant classes is the following:
 O1_i(j)       (pull back of the line bundle O(1) with respect to the ev_j)
 O1()           (product of all O1_i(j))
 Incidency(r)    (class of curves meeting a linear subspace)
-Hypersurface(b) (class of curves contained in a hypersurface)
+Hypersurface(b) (class of curves contained in a hypersurface of degree b)
 Contact()        (class of contact curves)
 R1(k)           (first derived functor of direct image of the pull back of O(-k))
 Psi(a)        (cycle of psi-classes)

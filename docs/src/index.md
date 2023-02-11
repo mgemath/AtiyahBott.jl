@@ -33,7 +33,6 @@ Psi
 Jet
 Contact
 R1
-Euler_inv
 ```
 
 ## Other Functions
@@ -41,9 +40,6 @@ Euler_inv
 dim_M
 codim
 is_zero_cycle
-check_Data
-fill_Data
-free_Data
 ```
 
 ## Index

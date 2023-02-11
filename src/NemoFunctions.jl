@@ -77,6 +77,9 @@ end
     mul_eq!(a, b)
 Equivalent to a *= b
 """
+# function mul_eq!(a::fmpq, b::fmpz)::Nothing
+#     ccall((:fmpq_mul, Nemo.libflint), Nothing,(Ref{fmpq}, Ref{fmpq}, Ref{fmpz}), a, a, b)
+# end
 function mul_eq!(a::fmpq, b::fmpq)::Nothing
     ccall((:fmpq_mul, Nemo.libflint), Nothing,(Ref{fmpq}, Ref{fmpq}, Ref{fmpq}), a, a, b)
 end
