@@ -103,18 +103,20 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
     else
         P[1] = P_input.func
     end
-    
+
     if do_check && !is_zero_cycle(n, deg, n_marks, P)
         return [fmpq(0)]
     end
     
     local result::Vector{Vector{fmpq}} = [[fmpq() for _ in 1:n_results] for _ in 1:Threads.nthreads()]
     local s::NTuple{n+1, fmpq} = (fmpq.(rand(Int16, n+1))...,)
+    nc = Dict{Int64,Vector{Int64}}([i for i in 1:(n+1)] .=> [[j + Int64(i<=j) for j in 1:n] for i in 1:(n+1)])
+
     
 
     if show_bar #set up progress data
         number_trees = A000055(deg+1)
-        threshold = sum(v -> number_trees[v]*(n+1)*(n^(v-1))*(v^n_marks), 2:deg+1)
+        threshold = sum(v -> number_trees[v]*(n+1)*(n^(v-1))*binomial(v+n_marks-1,n_marks), 2:deg+1)
         progress_bar::Progress = Progress(threshold, barglyphs=BarGlyphs("[=> ]"), color=:green)
         current_graph::Threads.Atomic{Int64} = Threads.Atomic{Int}(0)
     end
@@ -132,31 +134,45 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
         end
 
 
-        top_aut::Int64 = count_iso(ls)
+        tree_aut::Int64 = count_iso(ls)
 
         l = Threads.SpinLock()
-    
-        Threads.@threads for c in collect(ColorsIt(ls, n+1)) #cols   #we run among all colorations of g
+        CI, parents, subgraph_ends = col_it_init(ls, nc)
+        Threads.@threads for col in collect(CI)
 
-            local aut::Int64 = count_iso(ls, c)
+            local top_aut::Int64 = count_iso(ls, col)
 
-            for m in Base.Iterators.product(repeat([1:nv(g)], n_marks)...)    #we run among all marks of g, if n_marks==0 we have only the empty mark                           
-                
+            for m_inv in with_replacement_combinations(1:nv(g), n_marks)
+            # for m in Base.Iterators.product(repeat([1:nv(g)], n_marks)...)    #we run among all marks of g, if n_marks==0 we have only the empty mark                           
+                aut = count_iso(ls, col, m_inv)
                 for w in all_weights #we run among all weights of g
+                    PRODW = prod(w)
                     
                     try
                         local Euler::fmpq = fmpq(0)
+                        local temp = Vector{fmpq}(undef, n_results)
                         
-                        eq!(Euler, Euler_inv(g,c,w,s,m))
-                        div_eq!(Euler, aut*prod(w))
-                                                    
-                        for res in 1:n_results      #compute each term of the array P
-                            local temp::fmpq = fmpq(0)
-                            eq!(temp, Base.invokelatest(P[res], g,c,w,s,m))
-                            # eq!(temp, P[res](g,c,w,s,m))
-                            mul_eq!(temp, Euler)
-                            add_eq!(result[Threads.threadid()][res], temp)
-                            # result[res] += P[res](g,c,w,s,m)*Euler    #apply Atiyah-Bott
+                        for m in Base.Iterators.filter(mul_per -> top_aut == 1 || isempty(mul_per) || maximum(mul_per) < 3 || ismin(ls, col, mul_per, parents, subgraph_ends), multiset_permutations(m_inv, n_marks))
+
+                            for res in eachindex(temp)
+                                temp[res] = Base.invokelatest(P[res], g, col, w, s, m)
+                            end
+
+                            all(res -> temp[res] == fmpq(0), eachindex(temp)) && continue # check if at least one partial result is not zero
+                            
+                            if Euler == fmpq(0)
+                                eq!(Euler, Euler_inv(g, col, w, s, m))
+                                div_eq!(Euler, aut*PRODW)
+                            end
+                                                        
+                            for res in 1:n_results      #compute each term of the array P
+                                # local temp::fmpq = fmpq(0)
+                                # eq!(temp[res], Base.invokelatest(P[res], g, col, w, s, m))
+                                # eq!(temp, P[res](g,c,w,s,m))
+                                mul_eq!(temp[res], Euler)
+                                add_eq!(result[Threads.threadid()][res], temp[res])
+                                # result[res] += P[res](g,c,w,s,m)*Euler    #apply Atiyah-Bott
+                            end
                         end
                         
                     catch err 
@@ -170,8 +186,8 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                 end
                 
                 if show_bar
-                    Threads.atomic_add!(current_graph, top_aut÷aut)
-                    #progress_data.current_graph += progress_data.top_aut÷aut   
+                    Threads.atomic_add!(current_graph, tree_aut÷top_aut)
+                    #progress_data.current_graph += progress_data.tree_aut÷top_aut   
                     #update the progress bar
                     Threads.lock(l)
                     update!(progress_bar, current_graph[],

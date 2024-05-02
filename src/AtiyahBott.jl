@@ -13,6 +13,7 @@ using Graphs
 using ProgressMeter
 using Nemo
 
+include("Arithmetic.jl")
 include("Marked.jl")
 include("GraphFunctions.jl")
 include("EquivariantClasses.jl")

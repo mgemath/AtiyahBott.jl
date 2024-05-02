@@ -194,7 +194,7 @@ function Incidency( r )::EquivariantClass
     rule = :(Incidency( g, c, w, s, $r ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Int64)::fmpq
+function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Int64)::fmpq
     
     local p1::fmpq = fmpq(0); #the final result
     local temp1::fmpq = fmpq(1)
@@ -221,7 +221,7 @@ function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Ve
 
 end
 
-function Incidency(g::SimpleGraph{Int64},col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Vector{Int64})::fmpq
+function Incidency(g::SimpleGraph{Int64},col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Vector{Int64})::fmpq
     
     local p1::fmpq = fmpq(1)
     local temp1::fmpq = fmpq(1)
@@ -280,7 +280,7 @@ function Hypersurface( b )::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
+function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
 
     local p1::fmpq = fmpq(1)
     # local q1::fmpq = fmpq(1)
@@ -317,7 +317,7 @@ function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights:
 
 end
 
-function Hypersurface(g::SimpleGraph{Int64},col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Vector{Int64})::fmpq
+function Hypersurface(g::SimpleGraph{Int64},col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Vector{Int64})::fmpq
 
     local p1::fmpq = fmpq(1)
     local temp1::fmpq = fmpq(1)
@@ -355,7 +355,7 @@ function Contact()::EquivariantClass
     rule = :(Contact( g, c, w, s))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Contact(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}})::fmpq
+function Contact(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}})::fmpq
 
     local p1::fmpq = fmpq(1)
     # local q1::fmpq = fmpq(1)
@@ -425,8 +425,8 @@ function O1_i( j::Int64)::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function O1_i(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, j::Int64)::fmpq
-#function O1_i(col::Vector{UInt8}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, j::Int64)::fmpq    
+function O1_i(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, j::Int64)::fmpq
+#function O1_i(col::Vector{UInt8}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, j::Int64)::fmpq    
     return scalars[col[mark[j]]]
 end
 
@@ -469,7 +469,7 @@ function O1()::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function O1(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}})::fmpq
+function O1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type)::fmpq
     
     local p1 = fmpq(1)
     # col = Dict(vertices(g).=> col)
@@ -512,7 +512,7 @@ function R1( k )::EquivariantClass
     rule = :(R1( g, c, w, s, $k ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function R1(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, k::Int64)::fmpq
+function R1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, k::Int64)::fmpq
     
     local p1 = fmpq(1)
     # local q1 = fmpq(1)
@@ -621,11 +621,11 @@ function Psi( a )::EquivariantClass
     rule = :(Psi( g, c, w, s, m, $a ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, a::Int64)::fmpq
+function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, a::Int64)::fmpq
     
     return Psi(g, col, weights, scalars, mark, [a])
 end
-function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, a::Vector{Int64})::fmpq
+function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, a::Vector{Int64})::fmpq
         
     findfirst(x -> x>0, a) === nothing && return fmpq(1) #if all of them are zero or a is empty
     
@@ -725,7 +725,7 @@ function Jet( p, q )::EquivariantClass
     rule = :(Jet( g, c, w, s, m, $p, $q ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Jet(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}}, p::Int64, q::Int64)::fmpq
+function Jet(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, p::Int64, q::Int64)::fmpq
     
     local s1::fmpq = fmpq(0)
     local temp1::fmpq = fmpq(1)
@@ -756,7 +756,7 @@ end
 # - `m::Vector{Int64}`: the marks.
 
 # """
-function Euler_inv(g::SimpleGraph{Int64}, col::Tuple{Vararg{UInt8}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Tuple{Vararg{Int64}})::fmpq
+function Euler_inv(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type)::fmpq
    
     local V::fmpq = fmpq(1)
     #local E::fmpq = fmpq(1)
