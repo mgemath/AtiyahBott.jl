@@ -21,18 +21,18 @@ julia> P =
 After `=`, one has to write an expression in the equivariant classes. The expression is a combination of the equivariant classes. We compute the degree of `P` by
 
 ```julia-repl
-julia> AtiyahBottFormula(n,d,m,P);
+julia> AtiyahBottFormula(n, d, m, P);
 ```
 
 # Example
 ```julia-repl
 julia> P = Hypersurface(5);
-julia> AtiyahBottFormula(3,1,0,P);
+julia> AtiyahBottFormula(3, 1, 0, P);
 Warning: the class is not a 0-cycle.
-julia> AtiyahBottFormula(4,1,0,P);
+julia> AtiyahBottFormula(4, 1, 0, P);
 Result: 2875
-julia> AtiyahBottFormula(4,1,0,P,do_check = false); #skip the preliminary check on `P`
-julia> AtiyahBottFormula(4,1,0,P,show_bar = false); #it does not show the progress bar
+julia> AtiyahBottFormula(4, 1, 0, P, do_check = false); #skip the preliminary check on `P`
+julia> AtiyahBottFormula(4, 1, 0, P, show_bar = false); #it does not show the progress bar
 ```
 
 The function returns an array of the same dimension of `P` (non-vectorized classes are assumed as 1-dimensional arrays). The Julia notation for accessing to array is `name_of_array[i]` where `i` is an index starting from 1.
@@ -40,7 +40,7 @@ The function returns an array of the same dimension of `P` (non-vectorized class
 # Example
 ```julia-repl
 julia> P = Incidency(2)*Hypersurface(3);
-julia> x = AtiyahBottFormula(3,2,0,P)[1];
+julia> x = AtiyahBottFormula(3, 2, 0, P)[1];
 Result: 81
 julia> x
 81
@@ -50,10 +50,10 @@ The class `P` supports parameters.
 ```julia-repl
 julia> P = Hypersurface(3)*(Incidency(2)//3)^(d-1);
 julia> d = 2;
-julia> AtiyahBottFormula(3,d,0,P);
+julia> AtiyahBottFormula(3, d, 0, P);
 Result: 27
 julia> d = 3;
-julia> AtiyahBottFormula(3,d,0,P);
+julia> AtiyahBottFormula(3, d, 0, P);
 Result: 84
 ```
 
@@ -111,7 +111,21 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
     local result::Vector{Vector{fmpq}} = [[fmpq() for _ in 1:n_results] for _ in 1:Threads.nthreads()]
     local s::NTuple{n+1, fmpq} = (fmpq.(rand(Int16, n+1))...,)
     nc = Dict{Int64,Vector{Int64}}([i for i in 1:(n+1)] .=> [[j + Int64(i<=j) for j in 1:n] for i in 1:(n+1)])
-
+    Lambda_Gamma_e_dict::Dict{Tuple{Int64, Int64, Int64}, fmpq} = Dict{Tuple{Int64, Int64, Int64}, fmpq}()
+    omega_t_dict::Dict{Int64, fmpq} = Dict{Int64, fmpq}()
+    for c_1 in 1:(n+1)
+        omega_t_dict[c_1] = fmpq(1)
+        for c_2 in 1:(n+1)
+            if c_2 > c_1
+                for deg_e in 1:deg
+                    Lambda_Gamma_e_dict[deg_e, c_1, c_2] = Lambda_Gamma_e(s, deg_e, c_1, c_2)
+                end
+            end
+            if c_2 != c_1
+                omega_t_dict[c_1] *= s[c_1] - s[c_2]
+            end
+        end
+    end   
     
 
     if show_bar #set up progress data
@@ -147,7 +161,7 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                 aut = count_iso(ls, col, m_inv)
                 for w in all_weights #we run among all weights of g
                     PRODW = prod(w)
-                    
+                    d = Dict(edges(g).=> w)
                     try
                         local Euler::fmpq = fmpq(0)
                         local temp = Vector{fmpq}(undef, n_results)
@@ -161,8 +175,12 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                             all(res -> temp[res] == fmpq(0), eachindex(temp)) && continue # check if at least one partial result is not zero
                             
                             if Euler == fmpq(0)
-                                eq!(Euler, Euler_inv(g, col, w, s, m))
+                                eq!(Euler, Euler_inv(g, col, w, s, m, omega_t_dict))
                                 div_eq!(Euler, aut*PRODW)
+                                for e in edges(g)
+                                    triple = (d[e], min(col[src(e)], col[dst(e)]), max(col[src(e)], col[dst(e)]))
+                                    mul_eq!(Euler, Lambda_Gamma_e_dict[triple])
+                                end
                             end
                                                         
                             for res in 1:n_results      #compute each term of the array P

@@ -14,6 +14,7 @@ using ProgressMeter
 using Nemo
 
 include("Arithmetic.jl")
+include("Euler.jl")
 include("Marked.jl")
 include("GraphFunctions.jl")
 include("EquivariantClasses.jl")

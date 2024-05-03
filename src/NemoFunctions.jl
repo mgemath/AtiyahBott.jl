@@ -64,19 +64,19 @@ poweq!(x::fmpq, y::Int) = pow!(x, x, y)
 diveq!(x::fmpq, y::fmpq) = div!(x, x, y)
 Nemo.inv!(x::fmpq) = Nemo.inv!(x, x)
 =#
-"""
-    pow_eq!(a, b)
-Equivalent to a ^= b
-"""
+# """
+#     pow_eq!(a, b)
+# Equivalent to a ^= b
+# """
 function pow_eq!(a::fmpq, b::Int)::Nothing
     #iszero(a) && b < 0 && throw(DivideError())
     ccall((:fmpq_pow_si, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}, Int), a, a, b)
 end
 
-"""
-    mul_eq!(a, b)
-Equivalent to a *= b
-"""
+# """
+#     mul_eq!(a, b)
+# Equivalent to a *= b
+# """
 # function mul_eq!(a::fmpq, b::fmpz)::Nothing
 #     ccall((:fmpq_mul, Nemo.libflint), Nothing,(Ref{fmpq}, Ref{fmpq}, Ref{fmpz}), a, a, b)
 # end
@@ -87,10 +87,10 @@ function mul_eq!(a::fmpq, b::Int)::Nothing
     ccall((:fmpq_mul_si, Nemo.libflint), Nothing,(Ref{fmpq}, Ref{fmpq}, Int), a, a, b)
 end
 
-"""
-    add_eq!(a, b)
-Equivalent to a += b
-"""
+# """
+#     add_eq!(a, b)
+# Equivalent to a += b
+# """
 function add_eq!(a::fmpq, b::fmpq)::Nothing
     ccall((:fmpq_add, Nemo.libflint), Nothing,(Ref{fmpq}, Ref{fmpq}, Ref{fmpq}), a, a, b)
 end
@@ -100,10 +100,10 @@ function add_eq!(a::Vector{fmpq}, b::Vector{fmpq})::Nothing
     end
 end
 
-"""
-    div_eq!(a, b)
-Equivalent to a /= b
-"""
+# """
+#     div_eq!(a, b)
+# Equivalent to a /= b
+# """
 function div_eq!(a::fmpq, b::fmpq)::Nothing
     ccall((:fmpq_div, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}, Ref{fmpq}), a, a, b)
 end
@@ -111,34 +111,34 @@ function div_eq!(a::fmpq, b::Int)::Nothing
     ccall((:fmpq_div_fmpz, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}, Ref{fmpz}), a, a, fmpz(b))
 end
 
-"""
-    eq!(a, b)
-Equivalent to a = b
-"""
+# """
+#     eq!(a, b)
+# Equivalent to a = b
+# """
 function eq!(a::fmpq, b::fmpq)::Nothing
     ccall((:fmpq_set, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}), a, b)
 end
 
-"""
-    sub!(a, b)
-Equivalent to a -= b
-"""
+# """
+#     sub!(a, b)
+# Equivalent to a -= b
+# """
 function sub!(a::fmpq, b::fmpq)::Nothing
     ccall((:fmpq_sub, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}, Ref{fmpq}), a, a, b)
 end
 
-"""
-    neg!(a, b)
-Equivalent to a *= -1
-"""
+# """
+#     neg!(a, b)
+# Equivalent to a *= -1
+# """
 function neg!(a::fmpq)::Nothing
     ccall((:fmpq_neg, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}), a, a)
 end
 
-"""
-    inv!(a, b)
-Equivalent to a /= 1
-"""
+# """
+#     inv!(a, b)
+# Equivalent to a /= 1
+# """
 function inv!(a::fmpq)::Nothing
     ccall((:fmpq_inv, Nemo.libflint), Nothing, (Ref{fmpq}, Ref{fmpq}), a, a)
 end
