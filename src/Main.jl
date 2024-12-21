@@ -187,7 +187,7 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                                 # local temp::fmpq = fmpq(0)
                                 # eq!(temp[res], Base.invokelatest(P[res], g, col, w, s, m))
                                 # eq!(temp, P[res](g,c,w,s,m))
-                                mul_eq!(temp[res], Euler)
+                                temp[res] *= Euler
                                 add_eq!(result[Threads.threadid()][res], temp[res])
                                 # result[res] += P[res](g,c,w,s,m)*Euler    #apply Atiyah-Bott
                             end
