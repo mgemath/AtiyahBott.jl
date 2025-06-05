@@ -161,7 +161,7 @@ function LStoGraph(ls::Vector{Int64})::SimpleGraph{Int64}
 
     for v in 2:n
         p = findlast(i -> i < v && ls[i] == ls[v] - 1, eachindex(ls))
-        add_edge!(ans, p, v)
+        Graphs.add_edge!(ans, p, v)
     end
     
     return ans

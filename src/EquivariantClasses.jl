@@ -206,19 +206,19 @@ function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Ve
     local temp2::fmpq = fmpq(1)
     r -= 1                          
     
-    # col = Dict(vertices(g).=> col) #assign colors to vertices
-    d = Dict(edges(g).=> weights) #assign weights to edges
+    # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
+    d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
 
-    for e in edges(g)
+    for e in Graphs.edges(g)
         for t in (0:r)
-            eq!(temp1, scalars[col[src(e)]])
-            eq!(temp2, scalars[col[dst(e)]])
+            eq!(temp1, scalars[col[Graphs.src(e)]])
+            eq!(temp2, scalars[col[Graphs.dst(e)]])
             pow_eq!(temp1, t)
             pow_eq!(temp2, r-t)
             mul_eq!(temp1, temp2)
             mul_eq!(temp1, d[e])
             add_eq!(p1, temp1)
-            # p1 += d[e]*(scalars[col[src(e)]]^(t))*(scalars[col[dst(e)]]^(r-t))
+            # p1 += d[e]*(scalars[col[Graphs.src(e)]]^(t))*(scalars[col[Graphs.Graphs.dst(e)]]^(r-t))
         end
     end
 
@@ -299,28 +299,28 @@ function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights:
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     
-    # col = Dict(vertices(g).=> col) #assign colors to vertices
-    d = Dict(edges(g).=> weights) #assign weights to edges
+    # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
+    d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
-    for e in edges(g)
+    for e in Graphs.edges(g)
         for alph in 0:(b*d[e])
-            eq!(temp1, scalars[col[src(e)]])
-            eq!(temp2, scalars[col[dst(e)]])
+            eq!(temp1, scalars[col[Graphs.src(e)]])
+            eq!(temp2, scalars[col[Graphs.dst(e)]])
             mul_eq!(temp1, alph)
             mul_eq!(temp2, b*d[e]-alph)
             add_eq!(temp1, temp2)
             div_eq!(temp1, d[e])
             mul_eq!(p1, temp1)
-            # p1 *= (alph*scalars[col[src(e)]]+(b*d[e]-alph)*scalars[col[dst(e)]])//d[e]
+            # p1 *= (alph*scalars[col[Graphs.src(e)]]+(b*d[e]-alph)*scalars[col[Graphs.dst(e)]])//d[e]
         end
     end
     
-    for v in vertices(g)
+    for v in Graphs.vertices(g)
         eq!(temp1, scalars[col[v]])
         mul_eq!(temp1, b)
-        pow_eq!(temp1, 1-length(all_neighbors(g, v)))
+        pow_eq!(temp1, 1-length(Graphs.all_neighbors(g, v)))
         mul_eq!(p1, temp1)
-        #q1 *= (b*scalars[col[v]])^(1-length(all_neighbors(g, v)))   
+        #q1 *= (b*scalars[col[v]])^(1-length(Graphs.Graphs.all_neighbors(g, v)))   
     end
 
     # mul_eq!(p1,q1)
@@ -375,28 +375,28 @@ function Contact(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vect
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     
-    # col = Dict(vertices(g).=> col) #assign colors to vertices
-    d = Dict(edges(g).=> weights) #assign weights to edges
+    # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
+    d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
-    for e in edges(g)
+    for e in Graphs.edges(g)
         for alph in (1:2*d[e]-1)
-            eq!(temp1, scalars[col[src(e)]])
-            eq!(temp2, scalars[col[dst(e)]])
+            eq!(temp1, scalars[col[Graphs.src(e)]])
+            eq!(temp2, scalars[col[Graphs.dst(e)]])
             mul_eq!(temp1, alph)
             mul_eq!(temp2, 2*d[e]-alph)
             add_eq!(temp1, temp2)
             div_eq!(temp1, d[e])
             mul_eq!(p1, temp1)
-            # p1 *= (alph*scalars[col[src(e)]]+(2*d[e]-alph)*scalars[col[dst(e)]])//d[e]
+            # p1 *= (alph*scalars[col[Graphs.src(e)]]+(2*d[e]-alph)*scalars[col[Graphs.dst(e)]])//d[e]
         end
     end
     
-    for v in vertices(g)
+    for v in Graphs.vertices(g)
         eq!(temp1, scalars[col[v]])
         mul_eq!(temp1, 2)
-        pow_eq!(temp1, length(all_neighbors(g, v))-1)
+        pow_eq!(temp1, length(Graphs.all_neighbors(g, v))-1)
         mul_eq!(p1, temp1)
-        # q1 *= (2*scalars[col[v]])^(length(all_neighbors(g, v))-1)
+        # q1 *= (2*scalars[col[v]])^(length(Graphs.all_neighbors(g, v))-1)
     end
 
     # mul_eq!(p1, q1)
@@ -491,7 +491,7 @@ end
 function O1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type)::fmpq
     
     local p1 = fmpq(1)
-    # col = Dict(vertices(g).=> col)
+    # col = Dict(Graphs.vertices(g).=> col)
     
     for t in 1:length(mark)
         mul_eq!(p1, scalars[col[mark[t]]])
@@ -540,29 +540,29 @@ function R1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{In
     local temp1::fmpq = fmpq(1)
     local temp2::fmpq = fmpq(1)
     
-    # col = Dict(vertices(g).=> col) #assign colors to vertices
-    d = Dict(edges(g).=> weights) #assign weights to edges
+    # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
+    d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
-    for e in edges(g)
+    for e in Graphs.edges(g)
         for alph in 1:(k*d[e]-1)
-            eq!(temp1, scalars[col[src(e)]])
-            eq!(temp2, scalars[col[dst(e)]])
+            eq!(temp1, scalars[col[Graphs.src(e)]])
+            eq!(temp2, scalars[col[Graphs.dst(e)]])
             mul_eq!(temp1, alph)
             mul_eq!(temp2, k*d[e]-alph)
             add_eq!(temp1, temp2)
             div_eq!(temp1, d[e])
             neg!(temp1)
             mul_eq!(p1, temp1)
-            # p1 *= (-1)*(alph*scalars[col[src(e)]]+(k*d[e]-alph)*scalars[col[dst(e)]])//d[e]
+            # p1 *= (-1)*(alph*scalars[col[Graphs.src(e)]]+(k*d[e]-alph)*scalars[col[Graphs.dst(e)]])//d[e]
         end
     end
     
-    for v in vertices(g)
+    for v in Graphs.vertices(g)
         eq!(temp1, scalars[col[v]])
         mul_eq!(temp1, -k)
-        pow_eq!(temp1, length(all_neighbors(g, v))-1)
+        pow_eq!(temp1, length(Graphs.all_neighbors(g, v))-1)
         mul_eq!(p1, temp1)
-        # q1 *= (-k*scalars[col[v]])^(length(all_neighbors(g, v))-1)   
+        # q1 *= (-k*scalars[col[v]])^(length(Graphs.all_neighbors(g, v))-1)   
     end
 
     # mul_eq!(p1, q1)
@@ -664,10 +664,10 @@ function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{I
     local Sum_ai::Int64
     local n::Int64
     local M::Int64
-    local d = Dict(edges(g).=> weights) #assign weights to edges
+    local d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     local inv_marks::Dict{Int64,Vector{Int64}} = invert_marks(mark, nv(g))
     
-    for v in vertices(g)
+    for v in Graphs.vertices(g)
         
         a_v = Int64[]
         for i in inv_marks[v]
@@ -678,7 +678,7 @@ function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{I
         Sum_ai = sum(a_v)
         Sum_ai == 0 && continue #if S contains only zeros, or it is empty, continue
 
-        n = length(all_neighbors(g, v)) + length(inv_marks[v])
+        n = length(Graphs.all_neighbors(g, v)) + length(inv_marks[v])
         
         n > 2 && Sum_ai > n - 3 && return fmpq(0)
         
@@ -692,7 +692,7 @@ function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{I
 
         local s1 = fmpq(0)
         
-        for w in all_neighbors(g, v)
+        for w in Graphs.all_neighbors(g, v)
             # e = SimpleEdge(v,w)
             # d_e = haskey(d,e) ? d[e] : d[reverse(e)]
             eq!(temp1, scalars[col[w]])

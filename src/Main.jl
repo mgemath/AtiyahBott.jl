@@ -142,9 +142,9 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
         
         g::SimpleGraph{Int64} = LStoGraph(ls)
 
-        if ne(g) > last_ne
-            all_weights = get_weights(ne(g), deg)
-            last_ne = ne(g)
+        if Graphs.ne(g) > last_ne
+            all_weights = get_weights(Graphs.ne(g), deg)
+            last_ne = Graphs.ne(g)
         end
 
 
@@ -156,12 +156,12 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
 
             local top_aut::Int64 = count_iso(ls, col)
 
-            for m_inv in with_replacement_combinations(1:nv(g), n_marks)
+            for m_inv in with_replacement_combinations(1:Graphs.nv(g), n_marks)
             # for m in Base.Iterators.product(repeat([1:nv(g)], n_marks)...)    #we run among all marks of g, if n_marks==0 we have only the empty mark                           
                 aut = count_iso(ls, col, m_inv)
                 for w in all_weights #we run among all weights of g
                     PRODW = prod(w)
-                    d = Dict(edges(g).=> w)
+                    d = Dict(Graphs.edges(g).=> w)
                     try
                         local Euler::fmpq = fmpq(0)
                         local temp = Vector{fmpq}(undef, n_results)
@@ -177,8 +177,8 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                             if Euler == fmpq(0)
                                 eq!(Euler, Euler_inv(g, col, w, s, m, omega_t_dict))
                                 div_eq!(Euler, aut*PRODW)
-                                for e in edges(g)
-                                    triple = (d[e], min(col[src(e)], col[dst(e)]), max(col[src(e)], col[dst(e)]))
+                                for e in Graphs.edges(g)
+                                    triple = (d[e], min(col[Graphs.src(e)], col[Graphs.dst(e)]), max(col[Graphs.src(e)], col[Graphs.dst(e)]))
                                     mul_eq!(Euler, Lambda_Gamma_e_dict[triple])
                                 end
                             end

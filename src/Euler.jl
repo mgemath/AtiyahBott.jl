@@ -19,15 +19,15 @@ function Euler_inv(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Ve
     local q1::fmpq
     # local p1::fmpq    
     local s1::fmpq  
-    # col = Dict(vertices(g).=> col) #assing colors to vertices
-    d = Dict(edges(g).=> weights) #assign weights to edges
+    # col = Dict(Graphs.vertices(g).=> col) #assing colors to Graphs.vertices
+    d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     #=
-    omega_inv = Dict(edges(g).=> [d[e]//(scalars[col[src(e)]]-scalars[col[dst(e)]]) for e in edges(g)]) 
-    merge!(omega_inv,Dict(reverse.(edges(g)).=> [d[e]//(scalars[col[dst(e)]]-scalars[col[src(e)]]) for e in edges(g)]))
+    omega_inv = Dict(Graphs.edges(g).=> [d[e]//(scalars[col[src(e)]]-scalars[col[dst(e)]]) for e in Graphs.edges(g)]) 
+    merge!(omega_inv,Dict(reverse.(Graphs.edges(g)).=> [d[e]//(scalars[col[dst(e)]]-scalars[col[src(e)]]) for e in Graphs.edges(g)]))
     =#
     max_col = length(scalars)
     
-    # for e in edges(g)
+    # for e in Graphs.edges(g)
     #     q1 = fmpq(1)
     #     for j in 1:max_col
     #         if j != col[src(e)] && j != col[dst(e)]
@@ -64,8 +64,8 @@ function Euler_inv(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Ve
     #     #E *= ((omega_inv[e])^(2*d[e]))*((-1)^d[e])//(factorial(d[e])^2)//q1
     # end
     
-    for v in vertices(g)
-        nghbrs = all_neighbors(g, v)
+    for v in Graphs.vertices(g)
+        nghbrs = Graphs.all_neighbors(g, v)
         # p1 = fmpq(1)
         # for j in 1:max_col
         #     if j != col[v]

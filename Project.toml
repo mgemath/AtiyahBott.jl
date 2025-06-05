@@ -6,13 +6,13 @@ version = "2.2.2"
 [deps]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
-Nemo = "2edaba10-b0f1-5616-af89-8c11ac63239a"
+Oscar = "f1435218-dba5-11e9-1e4d-f1a5fab5fc13"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 Combinatorics = "1.0.2"
 Graphs = "1.10.0"
-Nemo = "0.44.0"
+Oscar = "1.2.2"
 ProgressMeter = "1.10.0"
 julia = "1.10"

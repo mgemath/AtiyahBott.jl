@@ -11,7 +11,7 @@ module AtiyahBott
 using Combinatorics 
 using Graphs 
 using ProgressMeter
-using Nemo
+using Oscar
 
 include("Arithmetic.jl")
 include("Euler.jl")
@@ -23,6 +23,6 @@ include("Main.jl")
 include("NemoFunctions.jl")
 include("Trees.jl")
 include("Colors.jl")
-
+include("Planarcurves.jl")
 
 end # module
