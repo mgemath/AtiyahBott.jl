@@ -1,27 +1,27 @@
-export planarcurves, computeplanarcurves, test_P_n_dual
+export hypersur, planarcurves, computeplanarcurves, test_P_n_dual
 
-function planarcurves(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
+function planarcurves(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Int64, r::Tuple{Vararg{fmpq}}, fixed_point::Int64)::fmpq
 
     local p1::fmpq = one(s[1])
     d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
     for e in Graphs.edges(g)
         for alph in 0:(b*d[e])
-            p1 *= (alph*s[col[Graphs.src(e)]]+(b*d[e]-alph)*s[col[Graphs.dst(e)]])//d[e]
+            p1 *= (alph*s[col[Graphs.src(e)]]+(b*d[e]-alph)*s[col[Graphs.dst(e)]] + r[fixed_point])//d[e]
         end
     end
     
     for v in Graphs.vertices(g)
-        p1 *= (b*s[col[v]])^(1-length(Graphs.all_neighbors(g, v)))   
+        p1 *= (b*s[col[v]] + r[fixed_point])^(1-length(Graphs.all_neighbors(g, v)))   
     end
 
     return p1
 
 end
 
-function planarcurves( b )::EquivariantClass
+function planarcurves( b , r, f)::EquivariantClass
     
-    rule = :(planarcurves( g, c, w, s, $b ))
+    rule = :(planarcurves( g, c, w, s, $b, $r, $f ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
@@ -124,8 +124,8 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_i
                         for m in Base.Iterators.filter(mul_per -> top_aut == 1 || isempty(mul_per) || maximum(mul_per) < 3 || ismin(ls, col, mul_per, parents, subgraph_ends), multiset_permutations(m_inv, n_marks))
 
                             # for res in eachindex(temp)
-                            #     # temp[res] = Base.invokelatest(P[res], g, col, w, s, m) * planarcurves(g, col, w, s, b)
-                            #     temp[res] = planarcurves(g, col, w, s, b)*(Incidency(g, col, w, r, n)^2)
+                            #     # temp[res] = Base.invokelatest(P[res], g, col, w, s, m) * hypersur(g, col, w, s, b)
+                            #     temp[res] = hypersur(g, col, w, s, b)*(Incidency(g, col, w, r, n)^2)
                             # end
 
                             # all(res -> temp[res] == zero(s[1]), eachindex(temp)) && continue # check if at least one partial result is not zero
@@ -140,12 +140,16 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_i
                                 end
                             end
 
-                            for fixed_p in 1:(n+1)
-                                temp[1] = (planarcurves(g, col, w, s, b)  * Euler) # M_bar part
-                                temp[1] *= (r[fixed_p]^n)*(Euler_2(r, fixed_p)) # P^n dual part
-                                result[1][1] += temp[1]
-                            end
-                            
+                            # for fixed_p in 1:(n+1)
+                            #     temp[1] = (hypersur(g, col, w, s, b)  * Euler) # M_bar part
+                            #     temp[1] *= (r[fixed_p]^n)*(Euler_2(r, fixed_p)) # P^n dual part
+
+                            #     # temp[1] = planarcurves(g, col, w, s, b, r, fixed_p) * Euler * Euler_2(r, fixed_p)
+                            #     result[1][1] += temp[1]
+                            # end
+
+                            temp[1] = (hypersur(g, col, w, s, b)  * Euler) # M_bar part
+                            result[1][1] += temp[1]
 
                         end
                         
@@ -208,4 +212,29 @@ function test_P_n_dual(n::Int64)
 
     return p1
     
+end
+
+function hypersur(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
+
+    local p1::fmpq = one(s[1])
+    d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
+    
+    for e in Graphs.edges(g)
+        for alph in 0:(b*d[e])
+            p1 *= (alph*s[col[Graphs.src(e)]]+(b*d[e]-alph)*s[col[Graphs.dst(e)]])//d[e]
+        end
+    end
+    
+    for v in Graphs.vertices(g)
+        p1 *= (b*s[col[v]])^(1-length(Graphs.all_neighbors(g, v)))   
+    end
+
+    return p1
+
+end
+
+function hypersur( b )::EquivariantClass
+    
+    rule = :(hypersur( g, c, w, s, $b ))
+    return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end

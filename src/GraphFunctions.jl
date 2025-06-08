@@ -7,5 +7,5 @@ end
 
 function get_weights(l::Int64, d::Int64)::Vector{Vector{Int64}}
 
-    return collect(Iterators.Flatten([multiset_permutations(p, l) for p in partitions(d,l)]))
+    return collect(Iterators.Flatten([multiset_permutations(p, l) for p in Combinatorics.partitions(d,l)]))
 end
