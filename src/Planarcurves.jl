@@ -1,36 +1,20 @@
-export planarcurves, computeplanarcurves
+export planarcurves, computeplanarcurves, test_P_n_dual
 
 function planarcurves(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
 
     local p1::fmpq = one(s[1])
-    # local q1::fmpq = one(s[1])
-    
-    # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
     d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
     for e in Graphs.edges(g)
         for alph in 0:(b*d[e])
-            # eq!(temp1, s[col[Graphs.src(e)]])
-            # eq!(temp2, s[col[Graphs.dst(e)]])
-            # mul_eq!(temp1, alph)
-            # mul_eq!(temp2, b*d[e]-alph)
-            # add_eq!(temp1, temp2)
-            # div_eq!(temp1, d[e])
-            # mul_eq!(p1, temp1)
             p1 *= (alph*s[col[Graphs.src(e)]]+(b*d[e]-alph)*s[col[Graphs.dst(e)]])//d[e]
         end
     end
     
     for v in Graphs.vertices(g)
-        # eq!(temp1, s[col[v]])
-        # mul_eq!(temp1, b)
-        # pow_eq!(temp1, 1-length(Graphs.all_neighbors(g, v)))
-        # mul_eq!(p1, temp1)
         p1 *= (b*s[col[v]])^(1-length(Graphs.all_neighbors(g, v)))   
     end
 
-    # mul_eq!(p1,q1)
-    
     return p1
 
 end
@@ -43,9 +27,10 @@ end
 
 function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_input; show_bar::Bool = true)::Vector{fmpq}
 
-    R, _s = polynomial_ring(QQ, :x => 0:n)
+    R, _s = polynomial_ring(QQ, :x => 1:(2*(n+1)))
     S = fraction_field(R)
-    s = ([S(_s[i]) for i in eachindex(_s)]...,)
+    s = ([S(_s[i]) for i in 1:(n+1)]...,)
+    r = ([S(_s[i]) for i in (n+2):(2*(n+1))]...,)
     
     if n < 1
         printstyled("ERROR: ", bold=true, color=:red)
@@ -96,7 +81,7 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_i
                 omega_t_dict[c_1] *= s[c_1] - s[c_2]
             end
         end
-    end   
+    end
     
 
     if show_bar #set up progress data
@@ -138,32 +123,30 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_i
                         
                         for m in Base.Iterators.filter(mul_per -> top_aut == 1 || isempty(mul_per) || maximum(mul_per) < 3 || ismin(ls, col, mul_per, parents, subgraph_ends), multiset_permutations(m_inv, n_marks))
 
-                            for res in eachindex(temp)
-                                # temp[res] = Base.invokelatest(P[res], g, col, w, s, m) * planarcurves(g, col, w, s, b)
-                                temp[res] = planarcurves(g, col, w, s, b)
-                            end
+                            # for res in eachindex(temp)
+                            #     # temp[res] = Base.invokelatest(P[res], g, col, w, s, m) * planarcurves(g, col, w, s, b)
+                            #     temp[res] = planarcurves(g, col, w, s, b)*(Incidency(g, col, w, r, n)^2)
+                            # end
 
-                            all(res -> temp[res] == zero(s[1]), eachindex(temp)) && continue # check if at least one partial result is not zero
+                            # all(res -> temp[res] == zero(s[1]), eachindex(temp)) && continue # check if at least one partial result is not zero
                             
                             if Euler == zero(s[1])
                                 Euler = Euler_inv(g, col, w, s, m, omega_t_dict)//(aut*PRODW)
-                                # div_eq!(Euler, aut*PRODW)
+
                                 for e in Graphs.edges(g)
                                     triple = (d[e], min(col[Graphs.src(e)], col[Graphs.dst(e)]), max(col[Graphs.src(e)], col[Graphs.dst(e)]))
-                                    # mul_eq!(Euler, Lambda_Gamma_e_dict[triple])
+
                                     Euler *= Lambda_Gamma_e_dict[triple]
                                 end
                             end
-                                                        
-                            for res in 1:n_results      #compute each term of the array P
-                                # local temp::fmpq = zero(s[1])
-                                # eq!(temp[res], Base.invokelatest(P[res], g, col, w, s, m))
-                                # eq!(temp, P[res](g,c,w,s,m))
-                                temp[res] *= Euler
-                                # add_eq!(result[Threads.threadid()][res], temp[res])
-                                result[1][res] += temp[res]
-                                # result[res] += P[res](g,c,w,s,m)*Euler    #apply Atiyah-Bott
+
+                            for fixed_p in 1:(n+1)
+                                temp[1] = (planarcurves(g, col, w, s, b)  * Euler) # M_bar part
+                                temp[1] *= (r[fixed_p]^n)*(Euler_2(r, fixed_p)) # P^n dual part
+                                result[1][1] += temp[1]
                             end
+                            
+
                         end
                         
                     catch err 
@@ -197,4 +180,32 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_i
     end
     
     return result[1]
+end
+
+function Euler_2(r, fixed_p::Int64)
+
+    p1 = one(r[1])
+
+    for j in 1:length(r)
+        j == fixed_p && continue
+        p1 *= 1//(r[fixed_p] - r[j])
+    end
+
+    return p1    
+end
+
+function test_P_n_dual(n::Int64)
+
+    R, _s = polynomial_ring(QQ, :x => 1:((n+1)))
+    S = fraction_field(R)
+    r = ([S(_s[i]) for i in 1:(n+1)]...,)
+
+    p1 = zero(r[1])
+
+    for fixed_p in 1:length(r)
+        p1 += (r[fixed_p]^n)*(Euler_2(r, fixed_p))
+    end
+
+    return p1
+    
 end

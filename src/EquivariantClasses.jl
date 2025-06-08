@@ -211,14 +211,14 @@ function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Ve
 
     for e in Graphs.edges(g)
         for t in (0:r)
-            eq!(temp1, s[col[Graphs.src(e)]])
-            eq!(temp2, s[col[Graphs.dst(e)]])
-            pow_eq!(temp1, t)
-            pow_eq!(temp2, r-t)
-            mul_eq!(temp1, temp2)
-            mul_eq!(temp1, d[e])
-            add_eq!(p1, temp1)
-            # p1 += d[e]*(s[col[Graphs.src(e)]]^(t))*(s[col[Graphs.Graphs.dst(e)]]^(r-t))
+            # eq!(temp1, s[col[Graphs.src(e)]])
+            # eq!(temp2, s[col[Graphs.dst(e)]])
+            # pow_eq!(temp1, t)
+            # pow_eq!(temp2, r-t)
+            # mul_eq!(temp1, temp2)
+            # mul_eq!(temp1, d[e])
+            # add_eq!(p1, temp1)
+            p1 += d[e]*(s[col[Graphs.src(e)]]^(t))*(s[col[Graphs.Graphs.dst(e)]]^(r-t))
         end
     end
 
