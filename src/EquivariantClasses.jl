@@ -199,11 +199,11 @@ function Incidency( r )::EquivariantClass
     rule = :(Incidency( g, c, w, s, $r ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Int64)::fmpq
+function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, r::Int64)::fmpq
     
-    local p1::fmpq = fmpq(0); #the final result
-    local temp1::fmpq = fmpq(1)
-    local temp2::fmpq = fmpq(1)
+    local p1::fmpq = zero(s[1]); #the final result
+    local temp1::fmpq = one(s[1])
+    local temp2::fmpq = one(s[1])
     r -= 1                          
     
     # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
@@ -211,14 +211,14 @@ function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Ve
 
     for e in Graphs.edges(g)
         for t in (0:r)
-            eq!(temp1, scalars[col[Graphs.src(e)]])
-            eq!(temp2, scalars[col[Graphs.dst(e)]])
+            eq!(temp1, s[col[Graphs.src(e)]])
+            eq!(temp2, s[col[Graphs.dst(e)]])
             pow_eq!(temp1, t)
             pow_eq!(temp2, r-t)
             mul_eq!(temp1, temp2)
             mul_eq!(temp1, d[e])
             add_eq!(p1, temp1)
-            # p1 += d[e]*(scalars[col[Graphs.src(e)]]^(t))*(scalars[col[Graphs.Graphs.dst(e)]]^(r-t))
+            # p1 += d[e]*(s[col[Graphs.src(e)]]^(t))*(s[col[Graphs.Graphs.dst(e)]]^(r-t))
         end
     end
 
@@ -226,16 +226,16 @@ function Incidency(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Ve
 
 end
 
-function Incidency(g::SimpleGraph{Int64},col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, r::Vector{Int64})::fmpq
+function Incidency(g::SimpleGraph{Int64},col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, r::Vector{Int64})::fmpq
     
-    local p1::fmpq = fmpq(1)
-    local temp1::fmpq = fmpq(1)
+    local p1::fmpq = one(s[1])
+    local temp1::fmpq = one(s[1])
 
     for j in unique(r)
-        eq!(temp1, Incidency(g, col, weights, scalars, j))
+        eq!(temp1, Incidency(g, col, weights, s, j))
         pow_eq!(temp1, count(x->x==j, r))
         mul_eq!(p1, temp1)
-        # p1 *= Hypersurface(g, col, weights, scalars, j)^count(x->x==j, b)
+        # p1 *= Hypersurface(g, col, weights, s, j)^count(x->x==j, b)
     end
     return p1
 
@@ -292,35 +292,35 @@ function Hypersurface( b )::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
+function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Int64)::fmpq
 
-    local p1::fmpq = fmpq(1)
-    # local q1::fmpq = fmpq(1)
-    local temp1::fmpq = fmpq(1)
-    local temp2::fmpq = fmpq(1)
+    local p1::fmpq = one(s[1])
+    # local q1::fmpq = one(s[1])
+    local temp1::fmpq = one(s[1])
+    local temp2::fmpq = one(s[1])
     
     # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
     d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
     for e in Graphs.edges(g)
         for alph in 0:(b*d[e])
-            eq!(temp1, scalars[col[Graphs.src(e)]])
-            eq!(temp2, scalars[col[Graphs.dst(e)]])
+            eq!(temp1, s[col[Graphs.src(e)]])
+            eq!(temp2, s[col[Graphs.dst(e)]])
             mul_eq!(temp1, alph)
             mul_eq!(temp2, b*d[e]-alph)
             add_eq!(temp1, temp2)
             div_eq!(temp1, d[e])
             mul_eq!(p1, temp1)
-            # p1 *= (alph*scalars[col[Graphs.src(e)]]+(b*d[e]-alph)*scalars[col[Graphs.dst(e)]])//d[e]
+            # p1 *= (alph*s[col[Graphs.src(e)]]+(b*d[e]-alph)*s[col[Graphs.dst(e)]])//d[e]
         end
     end
     
     for v in Graphs.vertices(g)
-        eq!(temp1, scalars[col[v]])
+        eq!(temp1, s[col[v]])
         mul_eq!(temp1, b)
         pow_eq!(temp1, 1-length(Graphs.all_neighbors(g, v)))
         mul_eq!(p1, temp1)
-        #q1 *= (b*scalars[col[v]])^(1-length(Graphs.Graphs.all_neighbors(g, v)))   
+        #q1 *= (b*s[col[v]])^(1-length(Graphs.Graphs.all_neighbors(g, v)))   
     end
 
     # mul_eq!(p1,q1)
@@ -329,16 +329,16 @@ function Hypersurface(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights:
 
 end
 
-function Hypersurface(g::SimpleGraph{Int64},col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, b::Vector{Int64})::fmpq
+function Hypersurface(g::SimpleGraph{Int64},col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Vector{Int64})::fmpq
 
-    local p1::fmpq = fmpq(1)
-    local temp1::fmpq = fmpq(1)
+    local p1::fmpq = one(s[1])
+    local temp1::fmpq = one(s[1])
 
     for j in unique(b)
-        eq!(temp1, Hypersurface(g, col, weights, scalars, j))
+        eq!(temp1, Hypersurface(g, col, weights, s, j))
         pow_eq!(temp1, count(x->x==j, b))
         mul_eq!(p1, temp1)
-        # p1 *= Hypersurface(g, col, weights, scalars, j)^count(x->x==j, b)
+        # p1 *= Hypersurface(g, col, weights, s, j)^count(x->x==j, b)
     end
     return p1
 end
@@ -368,35 +368,35 @@ function Contact()::EquivariantClass
     rule = :(Contact( g, c, w, s))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Contact(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}})::fmpq
+function Contact(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}})::fmpq
 
-    local p1::fmpq = fmpq(1)
-    # local q1::fmpq = fmpq(1)
-    local temp1::fmpq = fmpq(1)
-    local temp2::fmpq = fmpq(1)
+    local p1::fmpq = one(s[1])
+    # local q1::fmpq = one(s[1])
+    local temp1::fmpq = one(s[1])
+    local temp2::fmpq = one(s[1])
     
     # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
     d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
     for e in Graphs.edges(g)
         for alph in (1:2*d[e]-1)
-            eq!(temp1, scalars[col[Graphs.src(e)]])
-            eq!(temp2, scalars[col[Graphs.dst(e)]])
+            eq!(temp1, s[col[Graphs.src(e)]])
+            eq!(temp2, s[col[Graphs.dst(e)]])
             mul_eq!(temp1, alph)
             mul_eq!(temp2, 2*d[e]-alph)
             add_eq!(temp1, temp2)
             div_eq!(temp1, d[e])
             mul_eq!(p1, temp1)
-            # p1 *= (alph*scalars[col[Graphs.src(e)]]+(2*d[e]-alph)*scalars[col[Graphs.dst(e)]])//d[e]
+            # p1 *= (alph*s[col[Graphs.src(e)]]+(2*d[e]-alph)*s[col[Graphs.dst(e)]])//d[e]
         end
     end
     
     for v in Graphs.vertices(g)
-        eq!(temp1, scalars[col[v]])
+        eq!(temp1, s[col[v]])
         mul_eq!(temp1, 2)
         pow_eq!(temp1, length(Graphs.all_neighbors(g, v))-1)
         mul_eq!(p1, temp1)
-        # q1 *= (2*scalars[col[v]])^(length(Graphs.all_neighbors(g, v))-1)
+        # q1 *= (2*s[col[v]])^(length(Graphs.all_neighbors(g, v))-1)
     end
 
     # mul_eq!(p1, q1)
@@ -441,9 +441,9 @@ function O1_i( j::Int64)::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function O1_i(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, j::Int64)::fmpq
-#function O1_i(col::Vector{UInt8}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, j::Int64)::fmpq    
-    return scalars[col[mark[j]]]
+function O1_i(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, mark::Marks_type, j::Int64)::fmpq
+#function O1_i(col::Vector{UInt8}, s::Tuple{Vararg{fmpq}}, mark::Marks_type, j::Int64)::fmpq    
+    return s[col[mark[j]]]
 end
 
 
@@ -488,14 +488,14 @@ function O1()::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function O1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type)::fmpq
+function O1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, mark::Marks_type)::fmpq
     
-    local p1 = fmpq(1)
+    local p1 = one(s[1])
     # col = Dict(Graphs.vertices(g).=> col)
     
     for t in 1:length(mark)
-        mul_eq!(p1, scalars[col[mark[t]]])
-        # p1 *= scalars[col[mark[t]]]
+        mul_eq!(p1, s[col[mark[t]]])
+        # p1 *= s[col[mark[t]]]
     end
     
     return p1
@@ -533,36 +533,36 @@ function R1( k )::EquivariantClass
     rule = :(R1( g, c, w, s, $k ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function R1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, k::Int64)::fmpq
+function R1(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, k::Int64)::fmpq
     
-    local p1 = fmpq(1)
-    # local q1 = fmpq(1)
-    local temp1::fmpq = fmpq(1)
-    local temp2::fmpq = fmpq(1)
+    local p1 = one(s[1])
+    # local q1 = one(s[1])
+    local temp1::fmpq = one(s[1])
+    local temp2::fmpq = one(s[1])
     
     # col = Dict(Graphs.vertices(g).=> col) #assign colors to vertices
     d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
     for e in Graphs.edges(g)
         for alph in 1:(k*d[e]-1)
-            eq!(temp1, scalars[col[Graphs.src(e)]])
-            eq!(temp2, scalars[col[Graphs.dst(e)]])
+            eq!(temp1, s[col[Graphs.src(e)]])
+            eq!(temp2, s[col[Graphs.dst(e)]])
             mul_eq!(temp1, alph)
             mul_eq!(temp2, k*d[e]-alph)
             add_eq!(temp1, temp2)
             div_eq!(temp1, d[e])
             neg!(temp1)
             mul_eq!(p1, temp1)
-            # p1 *= (-1)*(alph*scalars[col[Graphs.src(e)]]+(k*d[e]-alph)*scalars[col[Graphs.dst(e)]])//d[e]
+            # p1 *= (-1)*(alph*s[col[Graphs.src(e)]]+(k*d[e]-alph)*s[col[Graphs.dst(e)]])//d[e]
         end
     end
     
     for v in Graphs.vertices(g)
-        eq!(temp1, scalars[col[v]])
+        eq!(temp1, s[col[v]])
         mul_eq!(temp1, -k)
         pow_eq!(temp1, length(Graphs.all_neighbors(g, v))-1)
         mul_eq!(p1, temp1)
-        # q1 *= (-k*scalars[col[v]])^(length(Graphs.all_neighbors(g, v))-1)   
+        # q1 *= (-k*s[col[v]])^(length(Graphs.all_neighbors(g, v))-1)   
     end
 
     # mul_eq!(p1, q1)
@@ -651,16 +651,16 @@ function Psi( a )::EquivariantClass
     rule = :(Psi( g, c, w, s, m, $a ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, a::Int64)::fmpq
+function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, mark::Marks_type, a::Int64)::fmpq
     
-    return Psi(g, col, weights, scalars, mark, [a])
+    return Psi(g, col, weights, s, mark, [a])
 end
-function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, a::Vector{Int64})::fmpq
+function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, mark::Marks_type, a::Vector{Int64})::fmpq
         
-    findfirst(x -> x>0, a) === nothing && return fmpq(1) #if all of them are zero or a is empty
+    findfirst(x -> x>0, a) === nothing && return one(s[1]) #if all of them are zero or a is empty
     
-    local q1::fmpq = fmpq(1)
-    local temp1::fmpq = fmpq(1)
+    local q1::fmpq = one(s[1])
+    local temp1::fmpq = one(s[1])
     local Sum_ai::Int64
     local n::Int64
     local M::Int64
@@ -680,7 +680,7 @@ function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{I
 
         n = length(Graphs.all_neighbors(g, v)) + length(inv_marks[v])
         
-        n > 2 && Sum_ai > n - 3 && return fmpq(0)
+        n > 2 && Sum_ai > n - 3 && return zero(s[1])
         
         #If no previous condition holds, then n>1
         if n == 2 #necessary |S_v| == 1
@@ -690,18 +690,18 @@ function Psi(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{I
         end
         
 
-        local s1 = fmpq(0)
+        local s1 = zero(s[1])
         
         for w in Graphs.all_neighbors(g, v)
             # e = SimpleEdge(v,w)
             # d_e = haskey(d,e) ? d[e] : d[reverse(e)]
-            eq!(temp1, scalars[col[w]])
+            eq!(temp1, s[col[w]])
             neg!(temp1)
-            add_eq!(temp1, scalars[col[v]])
+            add_eq!(temp1, s[col[v]])
             div_eq!(temp1, d[SimpleEdge(min(v,w),max(v,w))])
             inv!(temp1)
             add_eq!(s1, temp1)
-            # s1 += d_e//(scalars[col[v]]-scalars[col[w]])
+            # s1 += d_e//(s[col[v]]-s[col[w]])
         end
         pow_eq!(s1, -Sum_ai)
         mul_eq!(q1, s1)
@@ -762,19 +762,19 @@ function Jet( p, q )::EquivariantClass
     rule = :(Jet( g, c, w, s, m, $p, $q ))
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
-function Jet(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, scalars::Tuple{Vararg{fmpq}}, mark::Marks_type, p::Int64, q::Int64)::fmpq
+function Jet(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, mark::Marks_type, p::Int64, q::Int64)::fmpq
     
-    local s1::fmpq = fmpq(0)
-    local temp1::fmpq = fmpq(1)
+    local s1::fmpq = zero(s[1])
+    local temp1::fmpq = one(s[1])
 
     for h in 0:p
-        eq!(temp1, O1_i(g, col, weights, scalars, mark, 1))
+        eq!(temp1, O1_i(g, col, weights, s, mark, 1))
         mul_eq!(temp1, q)
         pow_eq!(temp1, p+1-h)
         mul_eq!(temp1, stirlings1(p+1, p+1-h))
-        mul_eq!(temp1, Psi(g, col, weights, scalars, mark, [h]))
+        mul_eq!(temp1, Psi(g, col, weights, s, mark, [h]))
         add_eq!(s1, temp1)
-        # s1 += stirlings1(p+1, p+1-h)*(q*O1_i(g, col, weights, scalars, mark, 1))^(p+1-h)*Psi(g, col, weights, scalars, mark, [h])
+        # s1 += stirlings1(p+1, p+1-h)*(q*O1_i(g, col, weights, s, mark, 1))^(p+1-h)*Psi(g, col, weights, s, mark, [h])
     end
 
     return s1

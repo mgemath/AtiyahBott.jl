@@ -71,21 +71,25 @@ More examples are available in the support of the equivariant classes. It is eno
 To add more classes, please contact the authors.
 """
 function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_check::Bool = true, show_bar::Bool = true)::Vector{fmpq}
+
+    R, _s = polynomial_ring(QQ, :x => 0:n)
+    S = fraction_field(R)
+    s = ([S(_s[i]) for i in eachindex(_s)]...,)
     
     if n < 1
         printstyled("ERROR: ", bold=true, color=:red)
         println("n must be positive, correct ", n)
-        return [fmpq(0)]
+        return [zero(s[1])]
     end
     if deg < 1 # deg > 13 || deg < 1
         printstyled("ERROR: ", bold=true, color=:red)
         println("d must be positive, correct ", deg)
-        return [fmpq(0)]
+        return [zero(s[1])]
     end
     if n_marks < 0
         printstyled("ERROR: ", bold=true, color=:red)
         println("m must be non negative, correct ", n_marks)
-        return [fmpq(0)]
+        return [zero(s[1])]
     end
     
     local n_results::Int64 = 1
@@ -105,16 +109,16 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
     end
 
     if do_check && !is_zero_cycle(n, deg, n_marks, P)
-        return [fmpq(0)]
+        return [zero(s[1])]
     end
     
-    local result::Vector{Vector{fmpq}} = [[fmpq() for _ in 1:n_results] for _ in 1:Threads.nthreads()]
-    local s::NTuple{n+1, fmpq} = (fmpq.(rand(Int16, n+1))...,)
+    local result::Vector{Vector{fmpq}} = [[zero(s[1]) for _ in 1:n_results] for _ in 1:Threads.nthreads()]
+    # s::NTuple{n+1, fmpq} = (fmpq.(rand(Int16, n+1))...,)
     nc = Dict{Int64,Vector{Int64}}([i for i in 1:(n+1)] .=> [[j + Int64(i<=j) for j in 1:n] for i in 1:(n+1)])
     Lambda_Gamma_e_dict::Dict{Tuple{Int64, Int64, Int64}, fmpq} = Dict{Tuple{Int64, Int64, Int64}, fmpq}()
     omega_t_dict::Dict{Int64, fmpq} = Dict{Int64, fmpq}()
     for c_1 in 1:(n+1)
-        omega_t_dict[c_1] = fmpq(1)
+        omega_t_dict[c_1] = one(s[1])
         for c_2 in 1:(n+1)
             if c_2 > c_1
                 for deg_e in 1:deg
@@ -150,9 +154,8 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
 
         tree_aut::Int64 = count_iso(ls)
 
-        l = Threads.SpinLock()
         CI, parents, subgraph_ends = col_it_init(ls, nc)
-        Threads.@threads for col in collect(CI)
+        for col in collect(CI)
 
             local top_aut::Int64 = count_iso(ls, col)
 
@@ -163,32 +166,34 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                     PRODW = prod(w)
                     d = Dict(Graphs.edges(g).=> w)
                     try
-                        local Euler::fmpq = fmpq(0)
+                        local Euler::fmpq = zero(s[1])
                         local temp = Vector{fmpq}(undef, n_results)
                         
                         for m in Base.Iterators.filter(mul_per -> top_aut == 1 || isempty(mul_per) || maximum(mul_per) < 3 || ismin(ls, col, mul_per, parents, subgraph_ends), multiset_permutations(m_inv, n_marks))
 
                             for res in eachindex(temp)
-                                temp[res] = Base.invokelatest(P[res], g, col, w, s, m)
+                                temp[res] = planarcurves(g, col, w, s, 5)#Base.invokelatest(P[res], g, col, w, s, m)
                             end
 
-                            all(res -> temp[res] == fmpq(0), eachindex(temp)) && continue # check if at least one partial result is not zero
+                            all(res -> temp[res] == zero(s[1]), eachindex(temp)) && continue # check if at least one partial result is not zero
                             
-                            if Euler == fmpq(0)
-                                eq!(Euler, Euler_inv(g, col, w, s, m, omega_t_dict))
-                                div_eq!(Euler, aut*PRODW)
+                            if Euler == zero(s[1])
+                                Euler = Euler_inv(g, col, w, s, m, omega_t_dict)//(aut*PRODW)
+                                # div_eq!(Euler, aut*PRODW)
                                 for e in Graphs.edges(g)
                                     triple = (d[e], min(col[Graphs.src(e)], col[Graphs.dst(e)]), max(col[Graphs.src(e)], col[Graphs.dst(e)]))
-                                    mul_eq!(Euler, Lambda_Gamma_e_dict[triple])
+                                    # mul_eq!(Euler, Lambda_Gamma_e_dict[triple])
+                                    Euler *= Lambda_Gamma_e_dict[triple]
                                 end
                             end
                                                         
                             for res in 1:n_results      #compute each term of the array P
-                                # local temp::fmpq = fmpq(0)
+                                # local temp::fmpq = zero(s[1])
                                 # eq!(temp[res], Base.invokelatest(P[res], g, col, w, s, m))
                                 # eq!(temp, P[res](g,c,w,s,m))
                                 temp[res] *= Euler
-                                add_eq!(result[Threads.threadid()][res], temp[res])
+                                # add_eq!(result[Threads.threadid()][res], temp[res])
+                                result[1][res] += temp[res]
                                 # result[res] += P[res](g,c,w,s,m)*Euler    #apply Atiyah-Bott
                             end
                         end
@@ -207,10 +212,8 @@ function AtiyahBottFormula(n::Int64, deg::Int64, n_marks::Int64, P_input; do_che
                     Threads.atomic_add!(current_graph, tree_aut÷top_aut)
                     #progress_data.current_graph += progress_data.tree_aut÷top_aut   
                     #update the progress bar
-                    Threads.lock(l)
                     update!(progress_bar, current_graph[],
                             showvalues = [(:"Total number of graphs",threshold),(:"Current graph",current_graph[])])
-                    Threads.unlock(l)
                 end
             end
         end
