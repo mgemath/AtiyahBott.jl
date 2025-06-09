@@ -1,18 +1,18 @@
 export hypersur, planarcurves, computeplanarcurves, test_P_n_dual
 
-function planarcurves(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, b::Int64, r::Tuple{Vararg{fmpq}}, fixed_point::Int64)::fmpq
+function planarcurves(g::SimpleGraph{Int64}, col::Tuple{Vararg{Int64}}, weights::Vector{Int64}, s::Tuple{Vararg{fmpq}}, r::Tuple{Vararg{fmpq}}, fixed_point::Int64)::fmpq
 
     local p1::fmpq = one(s[1])
     d = Dict(Graphs.edges(g).=> weights) #assign weights to edges
     
     for e in Graphs.edges(g)
-        for alph in 0:(b*d[e])
-            p1 *= (alph*s[col[Graphs.src(e)]]+(b*d[e]-alph)*s[col[Graphs.dst(e)]] + r[fixed_point])//d[e]
+        for alph in 0:(d[e])
+            p1 *= (alph*s[col[Graphs.src(e)]]+(d[e]-alph)*s[col[Graphs.dst(e)]] + r[fixed_point])//d[e]
         end
     end
     
     for v in Graphs.vertices(g)
-        p1 *= (b*s[col[v]] + r[fixed_point])^(1-length(Graphs.all_neighbors(g, v)))   
+        p1 *= (s[col[v]] + r[fixed_point])^(1-length(Graphs.all_neighbors(g, v)))   
     end
 
     return p1
@@ -25,44 +25,44 @@ function planarcurves( b , r, f)::EquivariantClass
     return EquivariantClass( rule, eval( :(( g, c, w, s, m ) -> $rule )))
 end
 
-function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_input; show_bar::Bool = true)::Vector{fmpq}
+function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64; show_bar::Bool = true)::Vector{fmpq}
 
-    R, _s = polynomial_ring(QQ, :x => 1:(2*(n+1)))
+    R, _s, _r = polynomial_ring(QQ, :x => 1:(n+1), :y => 1:(n+1))
     S = fraction_field(R)
     s = ([S(_s[i]) for i in 1:(n+1)]...,)
-    r = ([S(_s[i]) for i in (n+2):(2*(n+1))]...,)
+    r = ([S(_r[i]) for i in 1:(n+1)]...,)
     
-    if n < 1
-        printstyled("ERROR: ", bold=true, color=:red)
-        println("n must be positive, correct ", n)
-        return [zero(s[1])]
-    end
-    if deg < 1 # deg > 13 || deg < 1
-        printstyled("ERROR: ", bold=true, color=:red)
-        println("d must be positive, correct ", deg)
-        return [zero(s[1])]
-    end
-    if n_marks < 0
-        printstyled("ERROR: ", bold=true, color=:red)
-        println("m must be non negative, correct ", n_marks)
-        return [zero(s[1])]
-    end
+    # if n < 1
+    #     printstyled("ERROR: ", bold=true, color=:red)
+    #     println("n must be positive, correct ", n)
+    #     return [zero(s[1])]
+    # end
+    # if deg < 1 # deg > 13 || deg < 1
+    #     printstyled("ERROR: ", bold=true, color=:red)
+    #     println("d must be positive, correct ", deg)
+    #     return [zero(s[1])]
+    # end
+    # if n_marks < 0
+    #     printstyled("ERROR: ", bold=true, color=:red)
+    #     println("m must be non negative, correct ", n_marks)
+    #     return [zero(s[1])]
+    # end
     
     local n_results::Int64 = 1
 
-    if isa(P_input, Array)
-        n_results = length(P_input)
-    end
+    # if isa(P_input, Array)
+    #     n_results = length(P_input)
+    # end
 
-    local P::Vector{Function} = Vector(undef, n_results)
+    # local P::Vector{Function} = Vector(undef, n_results)
     
-    if isa(P_input, Array)
-        for i in eachindex(P)
-            P[i] = P_input[i].func
-        end
-    else
-        P[1] = P_input.func
-    end
+    # if isa(P_input, Array)
+    #     for i in eachindex(P)
+    #         P[i] = P_input[i].func
+    #     end
+    # else
+    #     P[1] = P_input.func
+    # end
     
     local result::Vector{Vector{fmpq}} = [[zero(s[1]) for _ in 1:n_results] for _ in 1:Threads.nthreads()]
 
@@ -140,16 +140,17 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64, P_i
                                 end
                             end
 
-                            # for fixed_p in 1:(n+1)
-                            #     temp[1] = (hypersur(g, col, w, s, b)  * Euler) # M_bar part
-                            #     temp[1] *= (r[fixed_p]^n)*(Euler_2(r, fixed_p)) # P^n dual part
+                            for fixed_p in 1:(n+1)
+                                # temp[1] = (hypersur(g, col, w, s, b)  * Euler) # M_bar part
+                                # temp[1] *= (r[fixed_p]^n)*(Euler_2(r, fixed_p)) # P^n dual part
 
-                            #     # temp[1] = planarcurves(g, col, w, s, b, r, fixed_p) * Euler * Euler_2(r, fixed_p)
-                            #     result[1][1] += temp[1]
-                            # end
+                                temp[1] =  r[fixed_p]*planarcurves(g, col, w, s, r, fixed_p) * Euler_2(r, fixed_p)
+                                temp[1] *= Incidency(g, col, w, s, n)^2 * Euler
+                                result[1][1] += temp[1]
+                            end
 
-                            temp[1] = (hypersur(g, col, w, s, b)  * Euler) # M_bar part
-                            result[1][1] += temp[1]
+                            # temp[1] = (hypersur(g, col, w, s, b)  * Euler) # M_bar part
+                            # result[1][1] += temp[1]
 
                         end
                         
