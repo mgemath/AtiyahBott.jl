@@ -27,10 +27,10 @@ end
 
 function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64; show_bar::Bool = true)::Vector{fmpq}
 
-    R, _s, _r = polynomial_ring(QQ, :x => 1:(n+1), :y => 1:(n+1))
+    R, _s, _r = polynomial_ring(QQ, :s => 1:(n+1), :r => 1:(n+1))
     S = fraction_field(R)
-    s = ([S(_s[i]) for i in 1:(n+1)]...,)
-    r = ([S(_r[i]) for i in 1:(n+1)]...,)
+    s = ([S(_s[i]) for i in 1:(n+1)]...,)  # lambda
+    r = ([S(_r[i]) for i in 1:(n+1)]...,)  # mu
     
     # if n < 1
     #     printstyled("ERROR: ", bold=true, color=:red)
@@ -146,6 +146,11 @@ function computeplanarcurves(n::Int64, deg::Int64, n_marks::Int64, b::Int64; sho
 
                                 temp[1] =  r[fixed_p]*planarcurves(g, col, w, s, r, fixed_p) * Euler_2(r, fixed_p)
                                 temp[1] *= Incidency(g, col, w, s, n)^2 * Euler
+                                # computeplanarcurves(3, 1, 0, 0);
+
+                                # temp[1] =  planarcurves(g, col, w, s, r, fixed_p) * Euler_2(r, fixed_p)
+                                # temp[1] *= Incidency(g, col, w, s, n)^3 *Incidency(g, col, w, s, n-1)^2 * Euler
+
                                 result[1][1] += temp[1]
                             end
 
